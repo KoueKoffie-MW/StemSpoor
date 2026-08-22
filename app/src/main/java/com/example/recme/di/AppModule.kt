@@ -5,6 +5,14 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.recme.ai.speaker.SpeakerProfileManager
 import com.example.recme.data.db.AppDatabase
+import com.example.recme.data.repository.ConfigRepositoryImpl
+import com.example.recme.data.repository.GateAuditRepositoryImpl
+import com.example.recme.data.repository.RecordingRepositoryImpl
+import com.example.recme.data.repository.SpeakerRepositoryImpl
+import com.example.recme.domain.repository.ConfigRepository
+import com.example.recme.domain.repository.GateAuditRepository
+import com.example.recme.domain.repository.RecordingRepository
+import com.example.recme.domain.repository.SpeakerRepository
 import com.example.recme.service.VadRecordingService
 import com.example.recme.storage.StorageManager
 import com.example.recme.vault.VaultManager
@@ -39,4 +47,10 @@ val appModule = module {
     single { get<AppDatabase>().gateAuditDao() }
     single { get<AppDatabase>().vaultIndexDao() }
     single { get<AppDatabase>().appConfigDao() }
+
+    // Repositories
+    single<RecordingRepository> { RecordingRepositoryImpl(get(), get()) }
+    single<SpeakerRepository> { SpeakerRepositoryImpl(get()) }
+    single<GateAuditRepository> { GateAuditRepositoryImpl(get()) }
+    single<ConfigRepository> { ConfigRepositoryImpl(get()) }
 }

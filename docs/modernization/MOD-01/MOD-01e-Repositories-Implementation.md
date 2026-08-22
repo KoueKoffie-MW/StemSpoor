@@ -3,7 +3,7 @@
 **Parent Level 1:** [MOD-01-PHASE1-Foundations.md](../MOD-01-PHASE1-Foundations.md)  
 **Parent Level 2:** [MOD-01b-Full-Room-Schema-Repositories-Migration.md](MOD-01b-Full-Room-Schema-Repositories-Migration.md)  
 **Focus:** One thing only — implementing the Repository interfaces and their Room-backed (plus sidecar coordination) implementations.  
-**Status:** Draft (Implementation Plan)  
+**Status:** Completed (Verified & Deployed)  
 **Date:** 2026-08-22
 
 **Scope Discipline:** This plan covers *only* the repository layer. Hilt is in MOD-01c, schema/DAOs in MOD-01d, migration in a separate focused plan, integration with segment merge in another.

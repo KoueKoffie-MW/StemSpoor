@@ -1,0 +1,24 @@
+*.iml
+.gradle
+/local.properties
+local.properties
+/.idea/
+.DS_Store
+/build
+app/build/
+/captures
+.externalNativeBuild
+.cxx
+.kotlin/
+
+# Large model files in root / download cache
+*.onnx
+!app/src/main/assets/silero_vad.onnx
+*.bin
+*.tflite
+*.tar.gz
+*.zip
+
+# Build outputs
+*.apk
+*.aab

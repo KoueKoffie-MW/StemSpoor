@@ -2,7 +2,7 @@
 
 **Master Plan:** [MODERNIZATION_PLAN.md](../../MODERNIZATION_PLAN.md)  
 **Created:** 2026-08-22  
-**Last Updated:** 2026-08-22 (Revised Execution Order)
+**Last Updated:** 2026-08-22 (MOD-03 Completed)
 
 ---
 
@@ -12,8 +12,8 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **MOD-01** | Foundations (Room 2.7.2, KSP, DAOs, Koin DI) | Phase 1 | Critical | **Completed** | [MOD-01-PHASE1-Foundations.md](MOD-01-PHASE1-Foundations.md) |
 | **MOD-02** | Voice Gate & Legal Consent (§201 StGB, 10s Circular Buffer) | Phase 2a | Critical | **Completed** | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
-| **MOD-03** | Speaker Diarization & Embeddings (sherpa-onnx 3D-Speaker) | Phase 2b | **High (Next)** | **Approved (Ready)** | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
-| **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini) | Phase 2c | High | **Approved (Ready)** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
+| **MOD-03** | Speaker Diarization & Embeddings (SpeakerDiarizationEngine) | Phase 2b | High | **Completed** | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
+| **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini) | Phase 2c | **High (Next)** | **Approved (Ready)** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
 | **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2d | Med-High | **Approved (Ready)** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
 | **MOD-06** | Modular Architecture (8 Gradle Modules Extraction) | Phase 3 | Medium-High | **Deferred to Phase 3** | [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) |
 | **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 4 | Medium | **Approved (Ready)** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
@@ -24,7 +24,7 @@
 ## Detailed Hierarchical Structure (Level 2 & Level 3 Plans)
 
 ### 🎙️ Phase 2b: MOD-03 Speaker Diarization & Embeddings
-* [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) — Level 1 Overview
+* [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) — Level 1 Overview (Completed)
   * [MOD-03a-Diarization-Design-Decisions.md](MOD-03/MOD-03a-Diarization-Design-Decisions.md) — Level 2 sherpa-onnx & C++ Clustering Design
   * [MOD-03b-Sherpa-ONNX-Diarization-Implementation.md](MOD-03/MOD-03b-Sherpa-ONNX-Diarization-Implementation.md) — Level 3 Diarization Engine Implementation
   * [MOD-03c-Speaker-Profile-Continuous-Learning.md](MOD-03/MOD-03c-Speaker-Profile-Continuous-Learning.md) — Level 3 Multilingual Profile Adaptation

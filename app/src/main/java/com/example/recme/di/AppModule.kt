@@ -56,6 +56,7 @@ val appModule = module {
 
     // AI & Voice Gate Engines
     single { com.example.recme.ai.speaker.SpeakerEmbeddingEngine(androidContext()) }
+    single { com.example.recme.ai.speaker.SpeakerDiarizationEngine(androidContext(), get(), get(), get(), get()) }
     single { com.example.recme.ai.voicegate.VoiceGateEvaluator(get(), get(), get(), get()) }
 
     // Bootstrap & Synchronization

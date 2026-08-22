@@ -12,7 +12,10 @@ import com.example.recme.ai.whisper.WhisperLanguageConfig
 import com.example.recme.service.VadRecordingService
 import com.example.recme.storage.StorageManager
 import com.example.recme.storage.TranscriptExporter
+import com.example.recme.ai.speaker.SpeakerDiarizationEngine
 import com.example.recme.sync.SyncScheduler
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Background WorkManager task that transcribes pending recordings using on-device Whisper & Gemma.
@@ -20,7 +23,9 @@ import com.example.recme.sync.SyncScheduler
 class TranscriptionWorker(
     context: Context,
     workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+) : CoroutineWorker(context, workerParams), KoinComponent {
+
+    private val diarizationEngine: SpeakerDiarizationEngine by inject()
 
     override suspend fun doWork(): Result {
         Log.i(TAG, "Starting local multilingual transcription job...")
@@ -79,6 +84,13 @@ class TranscriptionWorker(
                 val sidecar = item.sidecarData ?: continue
                 val jsonFile = item.jsonFile ?: continue
                 val audioFileName = item.audioFile.name
+
+                // 0. Run Speaker Diarization to attribute speakers and refine voiceprints
+                try {
+                    diarizationEngine.diarizeRecording(item.audioFile, jsonFile)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Speaker diarization encountered non-fatal error on $audioFileName", e)
+                }
 
                 Log.i(TAG, "Transcribing: $audioFileName (${sidecar.segments.size} segments)...")
                 TranscriptionStateTracker.updateStatus(

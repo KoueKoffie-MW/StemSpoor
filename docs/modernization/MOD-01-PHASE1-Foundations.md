@@ -96,6 +96,11 @@ Room DAOs + FileSystem (Sidecars)
   - `RecordingEntity`
   - `SpeechSegmentEntity` (with speaker, language, timestamps, file refs)
 - **Repositories** delegate to Room for metadata + still use sidecars for audio truth
+
+**Detailed Schema & Migration (Level 2):** See [MOD-01b-Full-Room-Schema-Repositories-Migration.md](MOD-01/MOD-01b-Full-Room-Schema-Repositories-Migration.md)
+- Full entities: RecordingEntity, SpeechSegmentEntity (with gate fields), SpeakerProfileEntity (consent + priority), VaultIndexEntity, GateAuditEntity
+- Sidecars remain authoritative; Room is optimized query projection
+- Bootstrap migration from existing sidecars + dual-write transition plan
 - Sidecars remain authoritative for audio data (no big rewrite)
 
 ---
@@ -172,3 +177,16 @@ Room DAOs + FileSystem (Sidecars)
 ---
 
 **This sub-plan is intended for specification-driven review before implementation.**
+- Granular task list (executable by another agent).
+- Exact integration with recent code changes (logo, segment merge gap setting, brand colors).
+- Full repository signatures, Hilt wiring, bootstrap code outline, and verification steps.
+
+**Level 3 Implementation Plans (narrow, one thing at a time — mirrors Level 2 a/b split):**
+- See [MOD-01-Level3-Implementation-Overview.md](MOD-01/MOD-01-Level3-Implementation-Overview.md)
+- Separate focused plans:
+  - MOD-01c-Hilt-DI-Implementation.md (setup & injection)
+  - MOD-01d-Room-Schema-Implementation.md (entities + DAOs)
+  - MOD-01e-Repositories-Implementation.md (repo layer)
+  - MOD-01f-Migration-Bootstrap-Implementation.md (migration + segment merge setting)
+  - MOD-01g-Branding-Logo-Color-Integration.md (logo + colors from recent changes)
+

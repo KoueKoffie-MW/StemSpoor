@@ -170,13 +170,20 @@ Short Embedding Window (1–3s)
 
 ---
 
-## Open Questions
+## Open Questions (Resolved in Level 2)
 
-- Should there be a "record unknown speakers" fallback mode?
-- How to handle visitors / one-time guests?
-- Should we support temporary "session allow" for a meeting?
-- What is the minimum confidence threshold policy?
-- How do we surface filter statistics to the user (e.g. "X% of speech was filtered today")?
+All original open questions have been resolved with concrete decisions and technical details. See the deeper design document:
+
+**→ [MOD-02a-VoiceGate-Design-Decisions.md](MOD-02/MOD-02a-VoiceGate-Design-Decisions.md)**
+
+**Summary of Resolutions (now authoritative):**
+- **Unknown speakers fallback**: Configurable. Default = strict discard when filter is on. Optional "Record as temporary Visitor (auto-expire)".
+- **Visitors / one-time guests**: Supported via "Allow this session" (notification/quick action) + temporary guest profiles with expiration date.
+- **Temporary "session allow"**: Yes — "Allow for next X hours" with automatic expiry.
+- **Confidence threshold**: Global `gateConfidenceThreshold` (default ~0.72) + per-profile override. Uses the existing language-aware matching from `SpeakerProfileManager`.
+- **Filter statistics**: Daily vault journal entry + "Voice Filter Health" section in Settings (kept %, top discard reasons). Optional debug mode for reviewing discards.
+
+These decisions have been fed back from Level 2. The parent plan (this document) and main MODERNIZATION_PLAN.md should reflect the chosen behaviors going forward.
 
 ---
 

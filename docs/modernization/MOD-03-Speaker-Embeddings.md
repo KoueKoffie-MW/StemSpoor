@@ -43,24 +43,26 @@ Improve speaker identification quality and make the speaker system production-gr
 
 ## Proposed Design
 
-### Options to Evaluate
-1. **sherpa-onnx speaker models** (recommended starting point)
-   - 3dspeaker series (eres2net, etc.)
-   - Ready Android support
-   - Good verification + diarization APIs
-
-2. **TitaNet Small** (NVIDIA) exported to ONNX
-3. **ECAPA-TDNN** variants
-4. Keep current 192-d as fallback
+### Selected Production Option: **sherpa-onnx + 3D-Speaker (eres2net INT8)**
+* **Model:** `3dspeaker-eres2net` (or `cam++`) quantized INT8 (~16MB–22MB footprint).
+* **Latency:** ~5ms–12ms per 2-second PCM slice on modern Android ARM64 hardware.
+* **Bindings:** Official `sherpa-onnx` Kotlin/Java bindings running natively or via ONNX Runtime Mobile.
+* **Output:** 192-d or 512-d normalized speaker vector with cosine distance scoring.
+* **Acoustic Fallback:** Retain lightweight internal MFCC centroid extractor as offline safety fallback if neural model fails to load.
 
 ### Architecture
-- `SpeakerEmbeddingEngine` interface
-  - `extractEmbedding(pcm: FloatArray): FloatArray`
-- Multiple implementations behind Hilt (or factory)
+- `SpeakerEmbeddingEngine` interface:
+  ```kotlin
+  interface SpeakerEmbeddingEngine {
+      suspend fun extractEmbedding(pcm: FloatArray): FloatArray
+      fun computeSimilarity(embeddingA: FloatArray, embeddingB: FloatArray): Float
+  }
+  ```
+- Modularized in `:core:ai` and injected via Hilt.
 - Separate concerns:
-  - Embedding extraction
-  - Scoring / verification
-  - Diarization / clustering (later)
+  1. **Voice Gate Verification**: Rapid online scoring against top-priority allowed profiles (Jan, family).
+  2. **Post-Recording Diarization**: Multi-speaker segment tagging and clustering.
+  3. **Continuous Centroid Update**: Adaptive learning for verified high-confidence segments.
 
 ---
 

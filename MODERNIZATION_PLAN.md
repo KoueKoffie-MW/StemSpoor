@@ -99,37 +99,36 @@ The current implementation is **early-stage** (initial commit) but architectural
 - Speaker Diarization
   - Replace/ augment current spectral approach with modern on-device speaker embedding model (ONNX)
   - Add clustering + profile management UI
-- **Voice Gate / Selective Recording Filter (Legal Compliance)**
+- **Voice Gate / Selective Recording Filter (Legal Compliance & 10s Verification Buffer)**
   - Implement a post-VAD "speaker gate" that **only commits audio to disk** (and later transcription) when the speaker matches an **enrolled + explicitly "allowed"** profile
+  - **10-Second Rolling Circular Verification Buffer:** Audio is buffered during initial speech bursts and committed retroactively once positive match is achieved, preventing false rejections of user thoughts in noisy environments.
   - Priority ordering: check profiles sorted by recorded minutes (typically user → wife → children)
   - Fully optional (global toggle, default = off for backward compatibility)
   - Per-profile "Allow recording" flag + explicit consent acknowledgment UI
   - Log filter decisions (kept/discarded + matched profile) in sidecars for audit
-  - Technical path: extend `SpeakerEmbeddingEngine` + `HybridSpeakerIdentifier` (already present); evaluate sherpa-onnx speaker models (e.g. 3dspeaker_eres2net or equivalent) for better accuracy + low-power performance on Android
+  - Technical path: `sherpa-onnx` + 3D-Speaker `eres2net` INT8 (~16MB, ~5–12ms latency on ARM64)
   - Directly mitigates German §201 StGB ("Verletzung der Vertraulichkeit des Wortes") and GDPR Article 9 biometric data risks by **design** — only consented voices are ever recorded
 - Transcription Pipeline
   - Modularize `WhisperEngine` + `GemmaPostProcessor` behind clear interfaces
   - Add streaming support and partial results
   - Model management (download, quantization levels, device capability detection)
   - Better language detection and code-switch handling
-- Add local semantic search
-  - On-device text embeddings (e.g., via ONNX or small sentence-transformer equivalent)
-  - Store embeddings in Room
-  - "Ask AI" can combine vector search + LLM
+- **Local Semantic Search & Vault Intelligence (RAG)**
+  - On-device text embeddings via `multilingual-e5-small` (INT8 ONNX, 384-dim, ~40MB, 100 languages) running directly on `onnxruntime-android`
+  - Store embeddings in Room database alongside SQLite FTS full-text search
+  - "Ask AI" combines dense vector retrieval + local Gemma LLM for conversational memory over the entire vault
 - Evaluate Gemma/Whisper upgrades
   - Newer llama.cpp or alternative inference (MediaPipe if suitable)
   - Quantized smaller models for real-time use
 - Make transcription queue more robust (retry, prioritization, progress reporting)
 
-### Phase 3: Architecture & Modularity (parallel with Phase 2)
-- Split into feature modules:
-  - `:core` (models, utils, DI)
-  - `:audio` or `:recording` (VAD + capture)
-  - `:transcription`
-  - `:ai` (speaker, chat, embeddings)
-  - `:vault`
-  - `:sync`
-  - `:ui` (or keep Compose in app for now)
+### Phase 3: Architecture & Modularity (Pragmatic 4-Module Layout)
+- Adopt clean 4-module structure:
+  - `:app` (Compose UI, Navigation, Main Entry Point)
+  - `:core:audio` (Silero VAD, AudioRecord, 10s Verification Buffer, Voice Gate)
+  - `:core:ai` (Whisper ASR, Sherpa-ONNX 3D-Speaker, Gemma, E5 Embeddings)
+  - `:core:data` (Room DB, Repositories, DataStore, JSON Sidecars, Obsidian Vault)
+- Eliminates multi-module build friction while preserving strict boundaries and cross-platform reusability.
 - Adopt consistent MVI / unidirectional data flow patterns in Compose screens
 - Strengthen existing state machines (extend the VAD pattern)
 
@@ -351,4 +350,72 @@ Detailed sub-plans have been created for focused work and hand-off:
 - [MOD-03 — Speaker Diarization & Embeddings](docs/modernization/MOD-03-Speaker-Embeddings.md)
 
 More sub-plans (Transcription, Semantic Search, Modularity, UX, Ops) will be added.
+
+
+---
+
+## Planning Hierarchy (Important)
+
+This modernization effort uses a deliberate layered planning structure:
+
+1. **Main Plan** (`MODERNIZATION_PLAN.md`) — Overall vision, phases, principles, and high-level roadmap.
+2. **Level 1 Sub-plans** (`docs/modernization/`) — Detailed specifications for each major area/feature.
+3. **Deeper Levels** (created as needed) — Implementation details, ADRs, task breakdowns, code sketches, etc.
+
+**Workflow rule:**
+- When starting work, always begin at the highest relevant level.
+- Read the main plan first for big-picture context.
+- Then read the specific sub-plan(s).
+- Only go deeper when the current level is insufficient.
+- Keep references to parent and sibling plans in every document.
+
+See the full index and hierarchy explanation here:  
+[docs/modernization/INDEX.md](docs/modernization/INDEX.md)
+
+**All Level 1 sub-plans are now complete** (MOD-01 through MOD-08).
+
+---
+
+## Note on Tools, Libraries, and Version Knowledge
+
+Many agents and LLMs have knowledge cutoffs. When implementing any sub-plan:
+
+- Always verify the **latest stable versions** and recommended usage on the official sites.
+- Prefer linking to official documentation rather than hard-coding version numbers in specs.
+- Examples of important sources to check:
+  - Hilt / Room / WorkManager / Compose: https://developer.android.com
+  - ONNX Runtime: https://onnxruntime.ai/
+  - sherpa-onnx: https://github.com/k2-fsa/sherpa-onnx
+  - llama.cpp: https://github.com/ggerganov/llama.cpp
+  - Gradle / AGP: https://developer.android.com/build
+
+This plan and its sub-plans are designed to remain useful even when specific library versions change.
+
+
+---
+
+## Deeper Planning Activity (2026-08-22)
+
+Level 2 work has begun on the highest-priority area:
+
+- **Voice Gate (MOD-02)**: Created `MOD-02a-VoiceGate-Design-Decisions.md`.
+  - All 5 open questions from Level 1 have been resolved with concrete policies and technical integration details.
+  - Decisions propagated back to MOD-02 Level 1 sub-plan.
+  - See `docs/modernization/MOD-02/MOD-02a-VoiceGate-Design-Decisions.md` and the updated INDEX.md.
+
+Future deeper work will follow the same pattern: dig for technical detail + decisions, then update parents.
+
+
+**Deeper on Foundations (2026-08-22)**
+- Created `MOD-01b-Full-Room-Schema-Repositories-Migration.md` (Level 2 under MOD-01).
+- Defines complete schema for Recording, SpeechSegment (gate fields), SpeakerProfile (consent/priority), VaultIndex, GateAudit.
+- Repositories, migration strategy (sidecars authoritative + bootstrap), and integration with MOD-02 Voice Gate.
+- Propagated back to Level 1 MOD-01 and INDEX.
+
+
+**All-the-way-down on Foundations (2026-08-22)**
+- Created `MOD-01c-Complete-Implementation-Plan.md` (Level 3).
+- Includes full granular tasks, updated for the 3 recent code changes (logo added, segment merge gap setting, colors matched to icon).
+- Ready for direct hand-off to another agent while preserving hierarchy and big picture.
+- Links and propagation added to Level 1 MOD-01 and INDEX.
 

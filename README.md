@@ -1,5 +1,9 @@
 # 🎙️ StemSpoor
 
+<p align="center">
+  <img src="docs/branding/stemspoor_badge_with_title.jpg" alt="StemSpoor Logo" width="280" style="border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);" />
+</p>
+
 > **Jou daaglikse stemspoor • All-day ambient voice buffer, acoustic speaker learning, and cognitive second brain.**
 
 ---

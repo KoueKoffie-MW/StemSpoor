@@ -1,119 +1,65 @@
-# StemSpoor Modernization — Sub-Plan Index (Level 1)
+# StemSpoor Modernization — Master Sub-Plan Index
 
 **Master Plan:** [MODERNIZATION_PLAN.md](../../MODERNIZATION_PLAN.md)  
 **Created:** 2026-08-22  
-**Last Updated:** 2026-08-22
-
-**Philosophy:**  
-When working on modernization:
-1. Start with the overall `MODERNIZATION_PLAN.md`
-2. Move to the relevant sub-plan(s) at this level
-3. Go deeper into more detailed specs / ADRs / code only when needed
-4. Always keep the big picture (main plan + sibling sub-plans) in context
-
-This hierarchy allows very detailed planning while preventing tunnel vision.
+**Last Updated:** 2026-08-22 (Post Grill-Me Session)
 
 ---
 
-## Current Level 1 Sub-Plans
+## Strategic Roadmap & Status
 
-| ID     | Title                                      | Phase     | Priority     | Status | File |
-|--------|--------------------------------------------|-----------|--------------|--------|------|
-| MOD-01 | Foundations (DI, Room, Repos, UseCases)    | Phase 1   | Critical     | Completed | [MOD-01-PHASE1-Foundations.md](MOD-01-PHASE1-Foundations.md) |
-| MOD-02 | Voice Gate + Privacy & Legal Compliance    | Phase 2   | **Highest**  | Completed | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
-| MOD-03 | Speaker Diarization & Embeddings           | Phase 2   | High         | In Progress | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
-| MOD-04 | Transcription Pipeline Modernization       | Phase 2   | High         | Draft  | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
-| MOD-05 | Local Semantic Search & Vault Intelligence | Phase 2   | Medium-High  | Draft  | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
-| MOD-06 | Modular Architecture                       | Phase 3   | Medium-High  | Draft  | [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) |
-| MOD-07 | UX, Platform & System Integration          | Phase 4   | Medium       | Draft  | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
-| MOD-08 | Ops, CI, Reliability & Sync                | Phase 5   | Medium       | Draft  | [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) |
-
----
-
-## Hierarchy Rules
-
-- Every sub-plan must link back to the **Parent** (main plan) and to relevant **Siblings**.
-- When a sub-plan needs more detail, create a deeper level (e.g. `MOD-02a-VoiceGate-Implementation-Details.md`) and link both ways.
-- For tools, libraries, and versions: always include links to official documentation and a note that the reader should verify the latest information.
+| ID | Module / Feature Area | Phase | Priority | Status | Entry Document |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **MOD-01** | Foundations (Room 2.7.2, KSP, DAOs, Koin DI) | Phase 1 | Critical | **Completed** | [MOD-01-PHASE1-Foundations.md](MOD-01-PHASE1-Foundations.md) |
+| **MOD-02** | Voice Gate & Legal Consent (§201 StGB, 10s Circular Buffer) | Phase 2a | Critical | **Completed** | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
+| **MOD-06** | Modular Architecture (8 Gradle Modules Extraction) | Phase 2b | **Critical (Next)** | **Approved (Ready)** | [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) |
+| **MOD-03** | Speaker Diarization & Embeddings (sherpa-onnx 3D-Speaker) | Phase 2c | High | **Approved (Ready)** | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
+| **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini) | Phase 2d | High | **Approved (Ready)** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
+| **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2e | Med-High | **Approved (Ready)** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
+| **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 3 | Medium | **Approved (Ready)** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
+| **MOD-08** | Storage Integrity Watchdog & Auto-Repair | Phase 4 | Medium | **Approved (Ready)** | [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) |
 
 ---
 
-## Recommended Workflow
+## Detailed Hierarchical Structure (Level 2 & Level 3 Plans)
 
-1. Read main plan for overall vision and priorities.
-2. Open the specific sub-plan for the area you're working on.
-3. Check sibling sub-plans for interactions (especially MOD-01 ↔ everything, MOD-02 ↔ MOD-03/MOD-05).
-4. Only then go into code, existing ADRs, or deeper specs.
+### Phase 2b: MOD-06 Modular Architecture
+* [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) — Level 1 Overview
+  * [MOD-06a-Module-Graph-and-Dependencies.md](MOD-06/MOD-06a-Module-Graph-and-Dependencies.md) — Level 2 Topology & Dependency Rules
+  * [MOD-06b-Core-Modules-Migration.md](MOD-06/MOD-06b-Core-Modules-Migration.md) — Level 3 Core Layer (:core:model, :core:database, :core:audio, :core:ai, :core:vault)
+  * [MOD-06c-Feature-Modules-Migration.md](MOD-06/MOD-06c-Feature-Modules-Migration.md) — Level 3 Feature Layer (:feature:record, :feature:recordings, :feature:settings, :app)
 
 ---
 
-## Next Level Planning
+### Phase 2c: MOD-03 Speaker Diarization & Embeddings
+* [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) — Level 1 Overview
+  * [MOD-03a-Diarization-Design-Decisions.md](MOD-03/MOD-03a-Diarization-Design-Decisions.md) — Level 2 sherpa-onnx & C++ Clustering Design
+  * [MOD-03b-Sherpa-ONNX-Diarization-Implementation.md](MOD-03/MOD-03b-Sherpa-ONNX-Diarization-Implementation.md) — Level 3 Diarization Engine Implementation
+  * [MOD-03c-Speaker-Profile-Continuous-Learning.md](MOD-03/MOD-03c-Speaker-Profile-Continuous-Learning.md) — Level 3 Multilingual Profile Adaptation
 
-When a sub-plan becomes large or implementation-specific, we will create a deeper layer inside or next to it (e.g. `MOD-02/details/` or `MOD-02a-...`).
+---
 
-**Current Level 1 is now complete.**
+### Phase 2d: MOD-04 Dual Transcription Pipeline
+* [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) — Level 1 Overview
+  * [MOD-04a-Dual-ASR-Design-Decisions.md](MOD-04/MOD-04a-Dual-ASR-Design-Decisions.md) — Level 2 Offline vs Cloud User Choice
+  * [MOD-04b-SenseVoice-Whisper-Local-Pipeline.md](MOD-04/MOD-04b-SenseVoice-Whisper-Local-Pipeline.md) — Level 3 On-Device SenseVoice-Small ASR
+  * [MOD-04c-Gemini-Cloud-Audio-Studio-Pipeline.md](MOD-04/MOD-04c-Gemini-Cloud-Audio-Studio-Pipeline.md) — Level 3 Google AI Studio Flash Integration
 
+---
 
-## Deeper Layers (Level 2+)
+### Phase 2e: MOD-05 Local Semantic Search & Obsidian Intelligence
+* [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) — Level 1 Overview
+  * [MOD-05a-Vector-FTS5-Search-Design.md](MOD-05/MOD-05a-Vector-FTS5-Search-Design.md) — Level 2 Hybrid BM25 + Cosine Retrieval
+  * [MOD-05b-BGE-Micro-Embeddings-Vault-Indexer.md](MOD-05/MOD-05b-BGE-Micro-Embeddings-Vault-Indexer.md) — Level 3 384-d Embedding & Bidirectional Wikilink Indexer
 
-When more detail is needed, deeper documents are created under the relevant sub-plan.
+---
 
-**Current Deeper Documents:**
+### Phase 3: MOD-07 UX & System Integration
+* [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) — Level 1 Overview
+  * [MOD-07a-Quick-Settings-Tile-and-Call-Interruption.md](MOD-07/MOD-07a-Quick-Settings-Tile-and-Call-Interruption.md) — Level 2/3 Quick Settings Tile & Telephony Watchdog
 
-- **MOD-02 Voice Gate**
-  - [MOD-02a-VoiceGate-Design-Decisions.md](MOD-02/MOD-02a-VoiceGate-Design-Decisions.md)
-    - Resolves all open questions from Level 1
-    - Detailed technical integration with `VadRecordingService`, `SpeakerEmbeddingEngine`, `SpeakerProfileManager`
-    - Concrete decisions on unknown speakers, visitors, temporary allows, thresholds, and statistics
-    - Model recommendations + graceful degradation
+---
 
-**Rule:** Deeper docs must link back to their parent Level 1 sub-plan. Level 1 must be updated to reference resolved decisions.
-
-
-- **MOD-01 Foundations**
-  - [MOD-01a-Room-and-Consent-Model.md](MOD-01/MOD-01a-Room-and-Consent-Model.md)
-    - Minimal Room entities driven by Voice Gate needs (allowedToRecord, consent, gateDecision on segments)
-    - Strategy for sidecar vs Room truth + initial migration
-
-
-- **MOD-01 Foundations**
-  - [MOD-01b-Full-Room-Schema-Repositories-Migration.md](MOD-01/MOD-01b-Full-Room-Schema-Repositories-Migration.md)
-    - Complete Room entities (Recording, SpeechSegment with gate fields, SpeakerProfile with consent, VaultIndex, GateAudit)
-    - Repository + DAO design
-    - Full migration + bootstrap strategy from sidecars (authoritative sidecars, Room as projection)
-    - Integration with Voice Gate
-
-
-- **MOD-01 Foundations** (deepest)
-    - Hand-off ready spec for another agent.
-    - Accounts for 3 recent code changes (logo, segment merge threshold setting, brand colors).
-    - Task-by-task breakdown, exact files, Room + repo details, migration code, tests.
-
-
-- **MOD-01 Foundations (Level 3 Implementation Plans — one per thing)**
-  - [MOD-01c-Hilt-DI-Implementation.md](MOD-01/MOD-01c-Hilt-DI-Implementation.md) — Hilt setup only
-  - [MOD-01d-Room-Schema-Implementation.md](MOD-01/MOD-01d-Room-Schema-Implementation.md) — Entities + DAOs only (includes support for segment merge config)
-  - [MOD-01e-Repositories-Implementation.md](MOD-01/MOD-01e-Repositories-Implementation.md) — Repository layer only
-  - [MOD-01f-Migration-Bootstrap-Implementation.md](MOD-01/MOD-01f-Migration-Bootstrap-Implementation.md) — Migration, bootstrap, dual-write + segment merge setting migration
-  - (Future granular ones for UseCases, integration, branding preservation, testing as needed)
-
-**Note on structure:** Mirrors the a/b split at Level 2. Each Level 3 doc is narrowly scoped to one feature/fix/area so it can be handed off independently while linking to parents and noting the 3 recent code changes (logo, segment merge threshold, brand colors) where relevant.
-
-
-**MOD-01 Foundations — Deeper Levels (structured to mirror higher a/b):**
-
-Level 2:
-- MOD-01a (consent/model)
-- MOD-01b (schema + repos + migration)
-
-Level 3 (Implementation — narrow plans, one per feature/fix):
-- Overview: MOD-01-Level3-Implementation-Overview.md
-- Focused (parallel branches):
-  - c-Hilt (DI setup)
-  - d-Schema impl
-  - e-Repos impl
-  - f-Migration (incl. recent segment merge change)
-  - g-Branding (logo + colors)
-
-Each Level 3 plan is self-contained for one thing, links to parents, notes the 3 recent code changes where relevant, and can be handed off independently.
-
+### Phase 4: MOD-08 Storage Integrity Watchdog
+* [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) — Level 1 Overview
+  * [MOD-08a-Storage-Watchdog-AutoRepair-RoomReindex.md](MOD-08/MOD-08a-Storage-Watchdog-AutoRepair-RoomReindex.md) — Level 2/3 WAV Auto-Repair & Room Sync Watchdog

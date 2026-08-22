@@ -67,6 +67,7 @@ val appModule = module {
     single { com.example.recme.vault.VaultIndexer(androidContext(), get(), get()) }
     single { com.example.recme.vault.VaultSearchEngine(androidContext(), get(), get()) }
 
-    // Bootstrap & Synchronization
+    // Bootstrap & Synchronization (MOD-08)
     single { com.example.recme.data.bootstrap.DatabaseBootstrapManager(get(), get(), get(), get(), get()) }
+    single { com.example.recme.storage.StorageIntegrityWatchdog(androidContext(), get(), get()) }
 }

@@ -34,16 +34,13 @@ class RecMeApplication : Application() {
 
         createNotificationChannels()
 
-        // Run crash recovery and Room database projection bootstrap on startup
+        // Run storage integrity watchdog and Room database projection bootstrap on startup (MOD-08)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val storageManager: StorageManager by inject()
-                storageManager.repairCorruptRecordings()
-
-                val bootstrapManager: DatabaseBootstrapManager by inject()
-                bootstrapManager.bootstrapFromDisk()
+                val watchdog: com.example.recme.storage.StorageIntegrityWatchdog by inject()
+                watchdog.auditAndRepairStorage()
             } catch (e: Exception) {
-                android.util.Log.e("RecMeApplication", "Startup storage/bootstrap failed", e)
+                android.util.Log.e("RecMeApplication", "Startup storage integrity audit failed", e)
             }
         }
     }

@@ -19,8 +19,8 @@ This hierarchy allows very detailed planning while preventing tunnel vision.
 
 | ID     | Title                                      | Phase     | Priority     | Status | File |
 |--------|--------------------------------------------|-----------|--------------|--------|------|
-| MOD-01 | Foundations (DI, Room, Repos, UseCases)    | Phase 1   | Critical     | Draft  | [MOD-01-PHASE1-Foundations.md](MOD-01-PHASE1-Foundations.md) |
-| MOD-02 | Voice Gate + Privacy & Legal Compliance    | Phase 2   | **Highest**  | Draft  | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
+| MOD-01 | Foundations (DI, Room, Repos, UseCases)    | Phase 1   | Critical     | Completed | [MOD-01-PHASE1-Foundations.md](MOD-01-PHASE1-Foundations.md) |
+| MOD-02 | Voice Gate + Privacy & Legal Compliance    | Phase 2   | **Highest**  | In Progress | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
 | MOD-03 | Speaker Diarization & Embeddings           | Phase 2   | High         | Draft  | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
 | MOD-04 | Transcription Pipeline Modernization       | Phase 2   | High         | Draft  | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
 | MOD-05 | Local Semantic Search & Vault Intelligence | Phase 2   | Medium-High  | Draft  | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |

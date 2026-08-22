@@ -27,10 +27,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+import com.example.recme.ai.voicegate.VoiceGateEvaluator
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
 /**
  * Foreground Service running 24/7 background audio monitoring with Silero VAD.
  */
-class VadRecordingService : Service() {
+class VadRecordingService : Service(), KoinComponent {
+
+    private val voiceGateEvaluator: VoiceGateEvaluator by inject()
+    private val storageManager: StorageManager by inject()
 
     private var audioCaptureEngine: AudioCaptureEngine? = null
     private var wakeLock: PowerManager.WakeLock? = null
@@ -81,8 +88,11 @@ class VadRecordingService : Service() {
         val splitSizeMb = prefs.getFloat(KEY_SPLIT_SIZE_MB, AudioConstants.DEFAULT_MAX_FILE_SIZE_MB)
         val splitSizeBytes = (splitSizeMb * 1024L * 1024L).toLong()
 
-        val storageManager = StorageManager(this)
-        val engine = AudioCaptureEngine(this, storageManager.getRecordingsDirectory())
+        val engine = AudioCaptureEngine(
+            context = this,
+            storageDir = storageManager.getRecordingsDirectory(),
+            voiceGateEvaluator = voiceGateEvaluator
+        )
         audioCaptureEngine = engine
 
         val initialNotification = buildNotification(isSpeech = false, durationMs = 0L, fileName = "")

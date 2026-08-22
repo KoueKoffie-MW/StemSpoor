@@ -54,6 +54,10 @@ val appModule = module {
     single<GateAuditRepository> { GateAuditRepositoryImpl(get()) }
     single<ConfigRepository> { ConfigRepositoryImpl(get()) }
 
+    // AI & Voice Gate Engines
+    single { com.example.recme.ai.speaker.SpeakerEmbeddingEngine(androidContext()) }
+    single { com.example.recme.ai.voicegate.VoiceGateEvaluator(get(), get(), get(), get()) }
+
     // Bootstrap & Synchronization
     single { com.example.recme.data.bootstrap.DatabaseBootstrapManager(get(), get(), get(), get(), get()) }
 }

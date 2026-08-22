@@ -20,6 +20,10 @@ import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.sqrt
 
+import com.example.recme.ai.voicegate.VerificationAudioBuffer
+import com.example.recme.ai.voicegate.VoiceGateEvaluator
+import com.example.recme.domain.model.GateDecision
+
 /**
  * Real-time audio engine metrics for UI visualizers.
  */
@@ -38,7 +42,8 @@ data class AudioEngineState(
  */
 class AudioCaptureEngine(
     private val context: Context,
-    private val storageDir: File
+    private val storageDir: File,
+    private val voiceGateEvaluator: VoiceGateEvaluator? = null
 ) : AutoCloseable {
 
     private val vadDetector = SileroVadDetector(context)
@@ -112,22 +117,108 @@ class AudioCaptureEngine(
         )
         sessionManager = sessionMgr
 
+        val verificationBuffer = VerificationAudioBuffer(maxSeconds = 10)
+        var isSegmentVerified = true
+        var pendingPreRollFrames: List<ShortArray> = emptyList()
+        var pendingSpeechStartEpochMs: Long = 0L
+        var pendingPreRollMs: Long = 0L
+        var isGateEvaluating = false
+        var currentGateDecision: GateDecision? = null
+
         val stateListener = object : VadStateListener {
             override fun onSegmentStarted(
                 preRollFrames: List<ShortArray>,
                 speechStartEpochMs: Long,
                 preRollMs: Long
             ) {
-                sessionMgr.onSegmentStarted(preRollFrames, speechStartEpochMs, preRollMs)
+                val gate = voiceGateEvaluator
+                if (gate != null) {
+                    isSegmentVerified = false
+                    pendingPreRollFrames = preRollFrames
+                    pendingSpeechStartEpochMs = speechStartEpochMs
+                    pendingPreRollMs = preRollMs
+                    verificationBuffer.clear()
+                    verificationBuffer.pushAll(preRollFrames)
+                    currentGateDecision = null
+                    isGateEvaluating = false
+                } else {
+                    isSegmentVerified = true
+                    sessionMgr.onSegmentStarted(preRollFrames, speechStartEpochMs, preRollMs)
+                }
                 _engineState.value = _engineState.value.copy(isSpeechDetected = true)
             }
 
             override fun onFrameToRecord(frame: ShortArray) {
-                sessionMgr.onFrameToRecord(frame)
+                if (isSegmentVerified) {
+                    sessionMgr.onFrameToRecord(frame)
+                } else {
+                    verificationBuffer.push(frame)
+                    val gate = voiceGateEvaluator
+                    // If we have at least 1.5 seconds (~47 frames) of speech buffer, evaluate
+                    if (gate != null && verificationBuffer.getFrameCount() >= 47 && !isGateEvaluating) {
+                        isGateEvaluating = true
+                        val samples = verificationBuffer.toFloatArray()
+                        scope.launch(Dispatchers.Default) {
+                            try {
+                                val decision = gate.evaluateSpeechWindow(samples)
+                                if (decision.allowed) {
+                                    isSegmentVerified = true
+                                    currentGateDecision = decision
+                                    val framesToFlush = verificationBuffer.drain()
+                                    sessionMgr.onSegmentStarted(pendingPreRollFrames, pendingSpeechStartEpochMs, pendingPreRollMs)
+                                    for (f in framesToFlush) {
+                                        sessionMgr.onFrameToRecord(f)
+                                    }
+                                    android.util.Log.i("AudioCaptureEngine", "Voice Gate verified: allowed speech segment retroactively committed (${framesToFlush.size} frames)")
+                                }
+                            } catch (e: Exception) {
+                                android.util.Log.w("AudioCaptureEngine", "Voice Gate evaluation error", e)
+                            } finally {
+                                isGateEvaluating = false
+                            }
+                        }
+                    }
+                }
             }
 
             override fun onSegmentEnded(speechEndEpochMs: Long, postRollMs: Long) {
-                sessionMgr.onSegmentEnded(speechEndEpochMs, postRollMs)
+                if (isSegmentVerified) {
+                    sessionMgr.onSegmentEnded(speechEndEpochMs, postRollMs)
+                    val decision = currentGateDecision ?: GateDecision(allowed = true)
+                    voiceGateEvaluator?.recordAuditAsync(
+                        sessionMgr.currentWavFile?.name,
+                        0,
+                        (speechEndEpochMs - pendingSpeechStartEpochMs).coerceAtLeast(0L),
+                        decision
+                    )
+                } else {
+                    // Segment ended before online verification triggered; run a final check on the complete utterance
+                    val gate = voiceGateEvaluator
+                    val samples = verificationBuffer.toFloatArray()
+                    val durationMs = verificationBuffer.getDurationMs()
+
+                    if (gate != null && samples.isNotEmpty()) {
+                        scope.launch(Dispatchers.Default) {
+                            val finalDecision = gate.evaluateSpeechWindow(samples)
+                            if (finalDecision.allowed) {
+                                val framesToFlush = verificationBuffer.drain()
+                                sessionMgr.onSegmentStarted(pendingPreRollFrames, pendingSpeechStartEpochMs, pendingPreRollMs)
+                                for (f in framesToFlush) {
+                                    sessionMgr.onFrameToRecord(f)
+                                }
+                                sessionMgr.onSegmentEnded(speechEndEpochMs, postRollMs)
+                                gate.recordAuditAsync(sessionMgr.currentWavFile?.name, 0, durationMs, finalDecision)
+                                android.util.Log.i("AudioCaptureEngine", "Voice Gate final verification passed: committed $durationMs ms")
+                            } else {
+                                verificationBuffer.clear()
+                                gate.recordAuditAsync(sessionMgr.currentWavFile?.name, 0, durationMs, finalDecision)
+                                android.util.Log.i("AudioCaptureEngine", "Voice Gate denied utterance ($durationMs ms): ${finalDecision.reason}")
+                            }
+                        }
+                    } else {
+                        verificationBuffer.clear()
+                    }
+                }
                 _engineState.value = _engineState.value.copy(isSpeechDetected = false)
             }
 

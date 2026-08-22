@@ -51,6 +51,14 @@ class SpeakerProfileManager(private val context: Context) {
         get() = prefs.getBoolean(KEY_CONTINUOUS_LEARNING_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_CONTINUOUS_LEARNING_ENABLED, value).apply()
 
+    var isVoiceGateEnabled: Boolean
+        get() = prefs.getBoolean(KEY_VOICE_GATE_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_VOICE_GATE_ENABLED, value).apply()
+
+    var voiceGateConfidenceThreshold: Float
+        get() = prefs.getFloat(KEY_VOICE_GATE_THRESHOLD, DEFAULT_VOICE_GATE_THRESHOLD)
+        set(value) = prefs.edit().putFloat(KEY_VOICE_GATE_THRESHOLD, value).apply()
+
     /**
      * Loads all enrolled speaker profiles.
      */
@@ -285,6 +293,44 @@ class SpeakerProfileManager(private val context: Context) {
         return normalize(updated)
     }
 
+    /**
+     * Updates legal consent and recording permissions for a specific speaker profile.
+     */
+    suspend fun updateConsent(
+        profileId: String,
+        allowedToRecord: Boolean,
+        consentNote: String? = null,
+        expiresAtEpochMs: Long? = null,
+        confidenceThresholdOverride: Float? = null
+    ) = withContext(Dispatchers.IO) {
+        mutex.withLock {
+            val profiles = loadProfilesInternal().toMutableList()
+            val idx = profiles.indexOfFirst { it.id == profileId }
+            if (idx >= 0) {
+                profiles[idx] = profiles[idx].copy(
+                    allowedToRecord = allowedToRecord,
+                    consentTimestamp = if (allowedToRecord) System.currentTimeMillis() else null,
+                    consentNote = consentNote,
+                    expiresAtEpochMs = expiresAtEpochMs,
+                    confidenceThresholdOverride = confidenceThresholdOverride,
+                    lastUpdatedEpochMs = System.currentTimeMillis()
+                )
+                saveProfilesInternal(profiles)
+                Log.i(TAG, "Updated consent for '${profiles[idx].name}': allowed=$allowedToRecord")
+            }
+        }
+    }
+
+    /**
+     * Retrieves all profiles explicitly authorized for audio recording, sorted by priority.
+     */
+    suspend fun getAllowedProfiles(): List<SpeakerProfile> = withContext(Dispatchers.IO) {
+        val now = System.currentTimeMillis()
+        getProfiles().filter { profile ->
+            profile.allowedToRecord && (profile.expiresAtEpochMs == null || profile.expiresAtEpochMs > now)
+        }.sortedByDescending { it.totalRecordedSeconds }
+    }
+
     private fun loadProfilesInternal(): List<SpeakerProfile> {
         return try {
             if (profilesFile.exists()) {
@@ -314,5 +360,9 @@ class SpeakerProfileManager(private val context: Context) {
         const val KEY_CONTINUOUS_LEARNING_ENABLED = "key_continuous_learning_enabled"
         const val KEY_SPEAKER_THRESHOLD = "key_speaker_threshold"
         const val DEFAULT_THRESHOLD = 0.65f
+        const val KEY_VOICE_GATE_ENABLED = "key_voice_gate_enabled"
+        const val KEY_VOICE_GATE_THRESHOLD = "key_voice_gate_threshold"
+        const val DEFAULT_VOICE_GATE_THRESHOLD = 0.72f
     }
 }
+

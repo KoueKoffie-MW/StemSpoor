@@ -224,6 +224,8 @@ fun SettingsScreen(
     val speakerProfileManager = remember { com.example.recme.ai.speaker.SpeakerProfileManager(context) }
     var isSpeakerRecEnabled by remember { mutableStateOf(speakerProfileManager.isSpeakerRecognitionEnabled) }
     var isContinuousLearning by remember { mutableStateOf(speakerProfileManager.isContinuousLearningEnabled) }
+    var isVoiceGateEnabled by remember { mutableStateOf(speakerProfileManager.isVoiceGateEnabled) }
+    var voiceGateThreshold by remember { mutableFloatStateOf(speakerProfileManager.voiceGateConfidenceThreshold) }
     var speakerThreshold by remember { mutableFloatStateOf(speakerProfileManager.recognitionThreshold) }
     var speakerProfiles by remember { mutableStateOf<List<com.example.recme.ai.speaker.SpeakerProfile>>(emptyList()) }
     var isAddSpeakerDialogOpen by remember { mutableStateOf(false) }
@@ -1039,6 +1041,56 @@ fun SettingsScreen(
                     if (isSpeakersExpanded) {
                         Spacer(modifier = Modifier.height(14.dp))
 
+                        // Toggle Voice Gate (§201 StGB Privacy Filter)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.VpnKey, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Voice Gate (Authorized Voices Only)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                }
+                                Text(
+                                    "Strictly filter audio and only persist speech matching authorized profiles (§201 StGB compliance)",
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Switch(
+                                checked = isVoiceGateEnabled,
+                                onCheckedChange = {
+                                    isVoiceGateEnabled = it
+                                    speakerProfileManager.isVoiceGateEnabled = it
+                                }
+                            )
+                        }
+
+                        if (isVoiceGateEnabled) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Voice Gate Confidence Threshold", fontSize = 12.sp)
+                                Text(String.format("%.2f", voiceGateThreshold), fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            }
+                            Slider(
+                                value = voiceGateThreshold,
+                                onValueChange = {
+                                    voiceGateThreshold = it
+                                    speakerProfileManager.voiceGateConfidenceThreshold = it
+                                },
+                                valueRange = 0.50f..0.90f,
+                                steps = 7,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
                         // Toggle Speaker Recognition
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -1178,6 +1230,13 @@ fun SettingsScreen(
                                                         fontSize = 11.sp,
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                                     )
+                                                    Spacer(modifier = Modifier.height(2.dp))
+                                                    Text(
+                                                        if (profile.allowedToRecord) "✓ Authorized to Record" else "✗ Unconsented (Ignored by Gate)",
+                                                        fontSize = 10.sp,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = if (profile.allowedToRecord) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
                                                     if (profile.languageSampleCounts.isNotEmpty()) {
                                                         Spacer(modifier = Modifier.height(3.dp))
                                                         FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -1200,15 +1259,26 @@ fun SettingsScreen(
                                                 }
                                             }
 
-                                            IconButton(
-                                                onClick = {
-                                                    scope.launch {
-                                                        speakerProfileManager.deleteProfile(profile.id)
-                                                        speakerProfiles = speakerProfileManager.getProfiles()
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Switch(
+                                                    checked = profile.allowedToRecord,
+                                                    onCheckedChange = { allowed ->
+                                                        scope.launch {
+                                                            speakerProfileManager.updateConsent(profile.id, allowed)
+                                                            speakerProfiles = speakerProfileManager.getProfiles()
+                                                        }
                                                     }
+                                                )
+                                                IconButton(
+                                                    onClick = {
+                                                        scope.launch {
+                                                            speakerProfileManager.deleteProfile(profile.id)
+                                                            speakerProfiles = speakerProfileManager.getProfiles()
+                                                        }
+                                                    }
+                                                ) {
+                                                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
                                                 }
-                                            ) {
-                                                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
                                             }
                                         }
                                     }

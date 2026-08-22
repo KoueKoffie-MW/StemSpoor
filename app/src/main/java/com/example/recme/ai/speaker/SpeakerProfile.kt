@@ -36,7 +36,25 @@ data class SpeakerProfile(
     val languageSampleCounts: Map<String, Int> = emptyMap(),
 
     @SerialName("last_updated_epoch_ms")
-    val lastUpdatedEpochMs: Long = System.currentTimeMillis()
+    val lastUpdatedEpochMs: Long = System.currentTimeMillis(),
+
+    @SerialName("allowed_to_record")
+    val allowedToRecord: Boolean = false,
+
+    @SerialName("consent_timestamp")
+    val consentTimestamp: Long? = null,
+
+    @SerialName("consent_note")
+    val consentNote: String? = null,
+
+    @SerialName("expires_at_epoch_ms")
+    val expiresAtEpochMs: Long? = null,
+
+    @SerialName("total_recorded_seconds")
+    val totalRecordedSeconds: Double = 0.0,
+
+    @SerialName("confidence_threshold_override")
+    val confidenceThresholdOverride: Float? = null
 )
 
 /**

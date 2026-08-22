@@ -2,7 +2,7 @@
 
 **Master Plan:** [MODERNIZATION_PLAN.md](../../MODERNIZATION_PLAN.md)  
 **Created:** 2026-08-22  
-**Last Updated:** 2026-08-22 (MOD-04 Completed)
+**Last Updated:** 2026-08-22 (MOD-05 Completed)
 
 ---
 
@@ -14,9 +14,9 @@
 | **MOD-02** | Voice Gate & Legal Consent (§201 StGB, 10s Circular Buffer) | Phase 2a | Critical | **Completed** | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
 | **MOD-03** | Speaker Diarization & Embeddings (SpeakerDiarizationEngine) | Phase 2b | High | **Completed** | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
 | **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini Flash) | Phase 2c | High | **Completed** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
-| **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2d | **Med-High (Next)** | **Approved (Ready)** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
+| **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2d | High | **Completed** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
 | **MOD-06** | Modular Architecture (8 Gradle Modules Extraction) | Phase 3 | Medium-High | **Deferred to Phase 3** | [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) |
-| **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 4 | Medium | **Approved (Ready)** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
+| **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 4 | **Medium (Next)** | **Approved (Ready)** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
 | **MOD-08** | Storage Integrity Watchdog & Auto-Repair | Phase 5 | Medium | **Approved (Ready)** | [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) |
 
 ---
@@ -40,7 +40,7 @@
 ---
 
 ### 🔍 Phase 2d: MOD-05 Local Semantic Search & Obsidian Intelligence
-* [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) — Level 1 Overview
+* [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) — Level 1 Overview (Completed)
   * [MOD-05a-Vector-FTS5-Search-Design.md](MOD-05/MOD-05a-Vector-FTS5-Search-Design.md) — Level 2 Hybrid BM25 + Cosine Retrieval
   * [MOD-05b-BGE-Micro-Embeddings-Vault-Indexer.md](MOD-05/MOD-05b-BGE-Micro-Embeddings-Vault-Indexer.md) — Level 3 384-d Embedding & Bidirectional Wikilink Indexer
 

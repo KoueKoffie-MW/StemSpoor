@@ -28,6 +28,7 @@ class TranscriptionWorker(
 
     private val diarizationEngine: SpeakerDiarizationEngine by inject()
     private val transcriptionManager: TranscriptionManager by inject()
+    private val vaultIndexer: com.example.recme.vault.VaultIndexer by inject()
 
     override suspend fun doWork(): Result {
         Log.i(TAG, "Starting transcription job (${transcriptionManager.engineMode.displayName})...")
@@ -91,11 +92,18 @@ class TranscriptionWorker(
                     TranscriptExporter.exportToObsidianMarkdown(item.audioFile, updatedSidecar)
                     TranscriptExporter.exportToObsidianMarkdown(item.audioFile, updatedSidecar, vaultManager.recordingsDir)
                     vaultManager.upsertRecordingToDailyNote(item, polishedSegments)
+
+                    // 4. Index transcript into Local Semantic Vector & FTS Store (MOD-05)
+                    try {
+                        vaultIndexer.indexRecording(item, polishedSegments)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Semantic vector indexing encountered non-fatal error on $audioFileName", e)
+                    }
                 }
 
                 TranscriptionStateTracker.updateStatus(audioFileName, TranscriptionStatus.Completed)
 
-                // 4. Trigger Google Drive Cloud Sync to upload .md and updated .json
+                // 5. Trigger Google Drive Cloud Sync to upload .md and updated .json
                 SyncScheduler.scheduleImmediateSync(applicationContext)
             }
 

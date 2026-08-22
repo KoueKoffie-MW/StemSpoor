@@ -62,6 +62,11 @@ val appModule = module {
     single { com.example.recme.ai.speaker.SpeakerDiarizationEngine(androidContext(), get(), get(), get(), get()) }
     single { com.example.recme.ai.voicegate.VoiceGateEvaluator(get(), get(), get(), get()) }
 
+    // Vault Intelligence & Semantic Search (MOD-05)
+    single { com.example.recme.ai.embedding.TextEmbeddingEngine(androidContext()) }
+    single { com.example.recme.vault.VaultIndexer(androidContext(), get(), get()) }
+    single { com.example.recme.vault.VaultSearchEngine(androidContext(), get(), get()) }
+
     // Bootstrap & Synchronization
     single { com.example.recme.data.bootstrap.DatabaseBootstrapManager(get(), get(), get(), get(), get()) }
 }

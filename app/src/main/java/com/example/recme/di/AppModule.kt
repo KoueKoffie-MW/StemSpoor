@@ -53,4 +53,7 @@ val appModule = module {
     single<SpeakerRepository> { SpeakerRepositoryImpl(get()) }
     single<GateAuditRepository> { GateAuditRepositoryImpl(get()) }
     single<ConfigRepository> { ConfigRepositoryImpl(get()) }
+
+    // Bootstrap & Synchronization
+    single { com.example.recme.data.bootstrap.DatabaseBootstrapManager(get(), get(), get(), get(), get()) }
 }

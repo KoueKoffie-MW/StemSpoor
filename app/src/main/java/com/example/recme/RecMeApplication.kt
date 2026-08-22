@@ -5,8 +5,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.example.recme.data.bootstrap.DatabaseBootstrapManager
 import com.example.recme.di.appModule
 import com.example.recme.storage.StorageManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -29,15 +34,18 @@ class RecMeApplication : Application() {
 
         createNotificationChannels()
 
-        // Run crash recovery on background files on startup (ADR-0002)
-        Thread {
+        // Run crash recovery and Room database projection bootstrap on startup
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                val storageManager = StorageManager(this)
+                val storageManager: StorageManager by inject()
                 storageManager.repairCorruptRecordings()
+
+                val bootstrapManager: DatabaseBootstrapManager by inject()
+                bootstrapManager.bootstrapFromDisk()
             } catch (e: Exception) {
-                e.printStackTrace()
+                android.util.Log.e("RecMeApplication", "Startup storage/bootstrap failed", e)
             }
-        }.start()
+        }
     }
 
     private fun createNotificationChannels() {

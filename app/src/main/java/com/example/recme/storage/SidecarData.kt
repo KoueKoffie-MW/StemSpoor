@@ -42,7 +42,19 @@ data class SpeechSegmentData(
     val speaker: String? = null,
 
     @SerialName("speaker_confidence")
-    val speakerConfidence: Float? = null
+    val speakerConfidence: Float? = null,
+
+    @SerialName("gate_decision")
+    val gateDecision: String? = "ALLOWED",
+
+    @SerialName("gate_profile_id")
+    val gateProfileId: String? = null,
+
+    @SerialName("gate_confidence")
+    val gateConfidence: Float? = null,
+
+    @SerialName("gate_reason")
+    val gateReason: String? = null
 )
 
 /**

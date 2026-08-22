@@ -21,8 +21,9 @@ playServicesAuth = "21.6.0"
 googleApiClient = "2.9.0"
 googleDriveApi = "v3-rev20250216-2.0.0"
 androidxWork = "2.11.2"
-androidxRoom = "2.6.1"
+androidxRoom = "2.7.2"
 koin = "4.0.0"
+ksp = "2.3.11"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -70,3 +71,4 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

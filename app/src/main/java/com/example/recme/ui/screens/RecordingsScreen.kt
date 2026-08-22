@@ -218,8 +218,10 @@ fun RecordingsScreen(
                             Toast.makeText(context, "Cancelled transcription for ${item.baseName}", Toast.LENGTH_SHORT).show()
                         },
                         onRemergeSegments = {
-                            storageManager.remergeRecordingSegments(item, 3000L)
-                            Toast.makeText(context, "Re-merged pauses < 3s in ${item.baseName}", Toast.LENGTH_SHORT).show()
+                            val gapMs = storageManager.getSegmentMergeGapMs()
+                            val gapSecStr = String.format(java.util.Locale.US, "%.1f", gapMs / 1000f)
+                            storageManager.remergeRecordingSegments(item, gapMs)
+                            Toast.makeText(context, "Re-merged pauses < ${gapSecStr}s in ${item.baseName}", Toast.LENGTH_SHORT).show()
                             refreshList()
                         },
                         onViewTranscript = { itemToViewTranscript = item }

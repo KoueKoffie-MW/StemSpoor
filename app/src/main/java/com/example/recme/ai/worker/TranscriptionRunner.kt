@@ -139,8 +139,13 @@ object TranscriptionRunner {
             storageManager.getOrCreateSidecar(targetAudioFile)
         }
 
-        // Pre-merge segments if legacy sidecar has single-word pauses (< 3000ms)
-        val mergedSegments = storageManager.mergeAdjacentSegments(sidecar.segments, gapThresholdMs = 3000L)
+        // Pre-merge segments if user-configured gap threshold > 0ms
+        val mergeGapMs = storageManager.getSegmentMergeGapMs()
+        val mergedSegments = if (mergeGapMs > 0L) {
+            storageManager.mergeAdjacentSegments(sidecar.segments, gapThresholdMs = mergeGapMs)
+        } else {
+            sidecar.segments
+        }
         val totalSegments = mergedSegments.size
 
         if (totalSegments == 0) {

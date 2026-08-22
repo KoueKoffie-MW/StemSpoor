@@ -338,3 +338,17 @@ This feature is one of the highest-leverage additions for both compliance and va
 - They provide ready Android builds, speaker verification, and integrate cleanly with the existing ONNX + Silero VAD setup.
 - Alternatives: TitaNet Small (ONNX export), ECAPA-TDNN variants.
 
+
+---
+
+## Sub-Plans (Specification-Driven)
+
+Detailed sub-plans have been created for focused work and hand-off:
+
+- [docs/modernization/INDEX.md](docs/modernization/INDEX.md)
+- [MOD-01 — Phase 1 Foundations](docs/modernization/MOD-01-PHASE1-Foundations.md)
+- [MOD-02 — Voice Gate + Privacy & Legal Compliance](docs/modernization/MOD-02-VoiceGate-Privacy-Legal.md) ← **Highest priority**
+- [MOD-03 — Speaker Diarization & Embeddings](docs/modernization/MOD-03-Speaker-Embeddings.md)
+
+More sub-plans (Transcription, Semantic Search, Modularity, UX, Ops) will be added.
+

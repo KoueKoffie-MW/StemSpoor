@@ -299,14 +299,35 @@ class StorageManager(private val context: Context) {
     }
 
     /**
-     * Merges adjacent speech segments where the gap between consecutive segments <= gapThresholdMs (default 3000ms).
+     * Retrieves the user-configured segment merge gap threshold in milliseconds.
+     * Defaults to 1000ms (1.0s). 0ms disables merging completely.
+     */
+    fun getSegmentMergeGapMs(): Long {
+        val prefs = context.getSharedPreferences(com.example.recme.service.VadRecordingService.PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getLong(
+            com.example.recme.service.VadRecordingService.KEY_SEGMENT_MERGE_GAP_MS,
+            com.example.recme.service.VadRecordingService.DEFAULT_SEGMENT_MERGE_GAP_MS
+        )
+    }
+
+    /**
+     * Updates the user-configured segment merge gap threshold in milliseconds.
+     */
+    fun setSegmentMergeGapMs(gapMs: Long) {
+        val prefs = context.getSharedPreferences(com.example.recme.service.VadRecordingService.PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putLong(com.example.recme.service.VadRecordingService.KEY_SEGMENT_MERGE_GAP_MS, gapMs).apply()
+    }
+
+    /**
+     * Merges adjacent speech segments where the gap between consecutive segments <= gapThresholdMs.
+     * If gapThresholdMs <= 0, no merging is performed.
      */
     fun mergeAdjacentSegments(
         segments: List<SpeechSegmentData>,
-        gapThresholdMs: Long = 3000L,
+        gapThresholdMs: Long = getSegmentMergeGapMs(),
         maxSegmentDurationMs: Long = 30000L
     ): List<SpeechSegmentData> {
-        if (segments.size <= 1) return segments
+        if (segments.size <= 1 || gapThresholdMs <= 0L) return segments
 
         val merged = mutableListOf<SpeechSegmentData>()
         var current = segments[0]
@@ -340,7 +361,10 @@ class StorageManager(private val context: Context) {
     /**
      * Re-merges speech segments on an existing recording and writes updated sidecar JSON.
      */
-    fun remergeRecordingSegments(item: RecordingItem, gapThresholdMs: Long = 3000L): RecordingItem {
+    fun remergeRecordingSegments(
+        item: RecordingItem,
+        gapThresholdMs: Long = getSegmentMergeGapMs()
+    ): RecordingItem {
         val sidecar = item.sidecarData ?: return item
         val jsonFile = item.jsonFile ?: return item
 
@@ -361,9 +385,9 @@ class StorageManager(private val context: Context) {
     }
 
     /**
-     * Re-merges all existing recordings in storage.
+     * Re-merges all existing recordings in storage using the specified gap threshold.
      */
-    fun remergeAllRecordings(gapThresholdMs: Long = 3000L): Int {
+    fun remergeAllRecordings(gapThresholdMs: Long = getSegmentMergeGapMs()): Int {
         val list = listRecordings()
         var count = 0
         for (item in list) {

@@ -34,6 +34,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BatteryAlert
+import androidx.compose.material.icons.filled.CallSplit
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Cloud
@@ -77,10 +78,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import java.util.Locale
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -136,6 +139,14 @@ fun SettingsScreen(
     }
     var splitSizeMb by remember {
         mutableFloatStateOf(prefs.getFloat(VadRecordingService.KEY_SPLIT_SIZE_MB, AudioConstants.DEFAULT_MAX_FILE_SIZE_MB))
+    }
+    var segmentMergeGapMs by remember {
+        mutableLongStateOf(
+            prefs.getLong(
+                VadRecordingService.KEY_SEGMENT_MERGE_GAP_MS,
+                VadRecordingService.DEFAULT_SEGMENT_MERGE_GAP_MS
+            )
+        )
     }
 
     // Google Drive Sync State
@@ -635,12 +646,13 @@ fun SettingsScreen(
                     ) {
                         OutlinedButton(
                             onClick = {
-                                val count = storageManager.remergeAllRecordings(3000L)
-                                Toast.makeText(context, "Re-merged pauses < 3s across $count recordings", Toast.LENGTH_SHORT).show()
+                                val count = storageManager.remergeAllRecordings(segmentMergeGapMs)
+                                val secStr = String.format(Locale.US, "%.1f", segmentMergeGapMs / 1000f)
+                                Toast.makeText(context, "Re-merged pauses < ${secStr}s across $count recordings", Toast.LENGTH_SHORT).show()
                             },
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Re-merge All (<3s)", fontSize = 11.sp)
+                            Text("Re-merge All (${String.format(Locale.US, "%.1f", segmentMergeGapMs / 1000f)}s)", fontSize = 11.sp)
                         }
 
                         Button(
@@ -655,6 +667,104 @@ fun SettingsScreen(
                         ) {
                             Text("Re-transcribe All", fontSize = 11.sp)
                         }
+                    }
+                }
+            }
+
+            // Segment Merging & Speaker Separation Card
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.CallSplit, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Segment Merging & Speaker Separation", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    }
+
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        "Controls the maximum silence pause allowed between speech bursts before keeping them as separate segments. Lower thresholds (0.5s – 1.0s) prevent rolling different speakers into one another during active conversations. Longer thresholds (2.0s – 3.0s) group sentences into larger paragraphs for monologues.",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // Live Timing Readout
+                    val gapSec = segmentMergeGapMs / 1000f
+                    val modeLabel = when {
+                        segmentMergeGapMs == 0L -> "0.0s — Raw VAD Turns (Never Merge)"
+                        segmentMergeGapMs <= 500L -> "${String.format(Locale.US, "%.1f", gapSec)}s — Fast Conversation"
+                        segmentMergeGapMs <= 1000L -> "${String.format(Locale.US, "%.1f", gapSec)}s — Standard Dialogue (Default)"
+                        segmentMergeGapMs <= 2000L -> "${String.format(Locale.US, "%.1f", gapSec)}s — Casual Discussion"
+                        else -> "${String.format(Locale.US, "%.1f", gapSec)}s — Monologue / Dictation"
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Merge Pause Threshold", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text(modeLabel, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = MaterialTheme.colorScheme.primary)
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Slider(
+                        value = (segmentMergeGapMs / 250L).toFloat(),
+                        onValueChange = {
+                            val newGap = (it.roundToInt() * 250L)
+                            segmentMergeGapMs = newGap
+                            storageManager.setSegmentMergeGapMs(newGap)
+                        },
+                        valueRange = 0f..20f,
+                        steps = 19,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Preset Quick-Select Chips
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        val presets = listOf(
+                            Pair(0L, "No Merge (0s)"),
+                            Pair(500L, "Fast Dialogue (0.5s)"),
+                            Pair(1000L, "Conversation (1.0s)"),
+                            Pair(2000L, "Discussion (2.0s)"),
+                            Pair(3000L, "Monologue (3.0s)")
+                        )
+                        for ((pMs, pLabel) in presets) {
+                            FilterChip(
+                                selected = segmentMergeGapMs == pMs,
+                                onClick = {
+                                    segmentMergeGapMs = pMs
+                                    storageManager.setSegmentMergeGapMs(pMs)
+                                },
+                                label = { Text(pLabel, fontSize = 11.sp) }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    OutlinedButton(
+                        onClick = {
+                            val count = storageManager.remergeAllRecordings(segmentMergeGapMs)
+                            val secStr = String.format(Locale.US, "%.1f", segmentMergeGapMs / 1000f)
+                            Toast.makeText(context, "Re-merged pauses < ${secStr}s across $count recordings", Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Sync, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Apply ${String.format(Locale.US, "%.1f", segmentMergeGapMs / 1000f)}s Merge to All Existing Recordings", fontSize = 11.sp)
                     }
                 }
             }

@@ -216,6 +216,8 @@ class VadRecordingService : Service() {
         const val KEY_SENSITIVITY = "key_sensitivity"
         const val KEY_OPUS_COMPRESSION = "key_opus_compression"
         const val KEY_SPLIT_SIZE_MB = "key_split_size_mb"
+        const val KEY_SEGMENT_MERGE_GAP_MS = "key_segment_merge_gap_ms"
+        const val DEFAULT_SEGMENT_MERGE_GAP_MS = 1000L // 1.0s default (conversational separation)
 
         private const val NOTIFICATION_ID = 1001
 

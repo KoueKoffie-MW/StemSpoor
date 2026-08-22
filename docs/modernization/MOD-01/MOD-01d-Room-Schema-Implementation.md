@@ -3,7 +3,7 @@
 **Parent Level 1:** [MOD-01-PHASE1-Foundations.md](../MOD-01-PHASE1-Foundations.md)  
 **Parent Level 2:** [MOD-01b-Full-Room-Schema-Repositories-Migration.md](MOD-01b-Full-Room-Schema-Repositories-Migration.md)  
 **Focus:** One thing only — implementing the Room schema, entities, and DAOs.  
-**Status:** Draft (Implementation Plan)  
+**Status:** Completed (Verified & Deployed)  
 **Date:** 2026-08-22
 
 **Important:** Narrow scope only. This matches the structure of MOD-01a / MOD-01b at higher levels. Separate plans exist/cover other pieces (Hilt in MOD-01c, Repositories in next, Migration in another).

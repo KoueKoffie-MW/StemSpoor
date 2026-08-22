@@ -41,6 +41,7 @@ The current implementation is **early-stage** (initial commit) but architectural
 - **Custom AI plumbing** is powerful but hard to evolve or test in isolation
 - **Limited observability** in background paths (logging, error recovery, progress)
 - Speaker diarization is basic (spectral + MFCC)
+- **Legal/compliance risk** — ambient recording of non-consented voices (especially under German §201 StGB and GDPR biometric rules) is a significant exposure
 - UI is functional but basic Compose
 - Google Drive sync is custom REST + WorkManager (brittle)
 - No CI/CD
@@ -98,6 +99,14 @@ The current implementation is **early-stage** (initial commit) but architectural
 - Speaker Diarization
   - Replace/ augment current spectral approach with modern on-device speaker embedding model (ONNX)
   - Add clustering + profile management UI
+- **Voice Gate / Selective Recording Filter (Legal Compliance)**
+  - Implement a post-VAD "speaker gate" that **only commits audio to disk** (and later transcription) when the speaker matches an **enrolled + explicitly "allowed"** profile
+  - Priority ordering: check profiles sorted by recorded minutes (typically user → wife → children)
+  - Fully optional (global toggle, default = off for backward compatibility)
+  - Per-profile "Allow recording" flag + explicit consent acknowledgment UI
+  - Log filter decisions (kept/discarded + matched profile) in sidecars for audit
+  - Technical path: extend `SpeakerEmbeddingEngine` + `HybridSpeakerIdentifier` (already present); evaluate sherpa-onnx speaker models (e.g. 3dspeaker_eres2net or equivalent) for better accuracy + low-power performance on Android
+  - Directly mitigates German §201 StGB ("Verletzung der Vertraulichkeit des Wortes") and GDPR Article 9 biometric data risks by **design** — only consented voices are ever recorded
 - Transcription Pipeline
   - Modularize `WhisperEngine` + `GemmaPostProcessor` behind clear interfaces
   - Add streaming support and partial results
@@ -259,3 +268,73 @@ The current implementation is **early-stage** (initial commit) but architectural
 ---
 
 *Generated with Eben as strategic companion.*
+## Privacy & Legal Compliance (added 2026-08-22)
+
+### Voice Gate / Selective Recording Filter
+
+**Motivation**
+- German § 201 StGB ("Verletzung der Vertraulichkeit des Wortes") criminalizes recording the non-publicly spoken word of *another* person without authorization (up to 3 years).
+- Recording only your own voice is generally not covered by this section.
+- Any other person's voice requires consent.
+- Under GDPR, voiceprints/embeddings for identification are biometric data (Article 9 special category) → requires explicit consent.
+
+**Design**
+- Add an **optional post-VAD Voice Gate** (second filter after Silero VAD).
+- Only commit audio to disk (pre-roll + continued recording) if the speaker matches an enrolled profile that is marked "allowed to record".
+- Priority: sort allowed profiles by recorded minutes (user first, then family members with most data).
+- Global toggle: "Voice Filter – Record only enrolled & allowed voices" (default = off).
+- Per-profile toggle + consent acknowledgment.
+- Log filter decisions (kept/discarded, matched profile, confidence) in sidecars.
+
+**Technical Suggestions**
+- Reuse/extend existing components:
+  - `SpeakerEmbeddingEngine` (192-d ONNX or filterbank fallback)
+  - `SpeakerProfileManager` (centroids, language-aware, continuous learning)
+  - `HybridSpeakerIdentifier`
+- Run a short embedding window (1–3 s) only on VAD-positive speech (not continuous listening).
+- Make the gate a clean class (`VoiceGate` or `SpeakerGate`) that the `VadRecordingService` consults before committing buffers.
+- For production accuracy, evaluate **sherpa-onnx** speaker models (e.g. 3dspeaker_eres2net_base or similar). Sherpa-onnx provides ready Android support, speaker verification/identification, and pairs naturally with the existing Silero VAD.
+- Add Room entity (or extend profiles) to store:
+  - `allowedToRecord: Boolean`
+  - `consentTimestamp`
+  - `consentNote` (free text for documentation)
+- Record filter outcome in `SidecarData` / segment metadata.
+- Add a small "Filter Health" debug view showing recent gate decisions.
+
+**Implementation order recommendation**
+1. Add UI toggles + per-profile "allowed" flag (quick win).
+2. Wire the gate in the recording service (using current embedding engine).
+3. Add logging/audit.
+4. Evaluate + integrate a better speaker embedding model (sherpa-onnx recommended).
+5. Add Room-backed consent tracking in Phase 1 foundations.
+
+**Risks / Caveats**
+- False negatives (dropping own speech) → good enrollment samples + adaptive threshold needed.
+- Overlapping speech / noise will not be perfect.
+- Even with the filter, the microphone is open — the app should never claim "100% only your voice".
+- Consent must still be obtained and documented for every enrolled speaker.
+
+This feature is one of the highest-leverage additions for both compliance and vault quality.
+
+
+**Technical Recommendations (Voice Gate details)**
+- Architecture: Insert `VoiceGate` after VAD segment detection but before buffer commit in `VadRecordingService`.
+- Run embedding only on short VAD-positive chunks (power efficient).
+- Use existing 192-d embedding + cosine; upgrade model via sherpa-onnx when ready.
+- Add `SpeakerConsent` data in Room (Phase 1) with `allowed`, `consentDate`, `note`.
+- Expose filter statistics in a new "Compliance & Filter" settings section.
+- Update sidecar schema to include `gateDecision`, `gateProfile`, `gateConfidence`.
+- Tests: Add unit tests for the gate logic (mock profiles + embeddings).
+
+
+**Quick Wins (added for Voice Gate / Compliance)**
+7. Add global + per-profile "Voice Filter / Allowed to record" toggles in SettingsScreen (with consent reminder text).
+8. Wire a minimal `VoiceGate` stub that logs decisions but still records everything (behind the global toggle).
+9. Add `gateDecision` fields to sidecar writing for future audit.
+10. Document the legal rationale in a new ADR or in this plan.
+
+**Model Recommendations (Speaker)**
+- Primary candidate: sherpa-onnx speaker models (e.g. 3dspeaker_eres2net or similar from k2-fsa/sherpa-onnx releases).
+- They provide ready Android builds, speaker verification, and integrate cleanly with the existing ONNX + Silero VAD setup.
+- Alternatives: TitaNet Small (ONNX export), ECAPA-TDNN variants.
+

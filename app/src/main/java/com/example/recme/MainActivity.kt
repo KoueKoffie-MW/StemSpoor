@@ -14,7 +14,7 @@ import com.example.recme.audio.AudioConstants
 import com.example.recme.service.BootReceiver
 import com.example.recme.service.VadRecordingService
 import com.example.recme.storage.StorageManager
-import com.example.recme.theme.RecMeTheme
+import com.example.recme.theme.StemSpoorTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         handleTranscriptionIntent(intent)
 
         setContent {
-            RecMeTheme {
+            StemSpoorTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

@@ -1034,7 +1034,91 @@ fun SettingsScreen(
                 }
             }
 
-            // 3. Voiceprints & Speaker Profiles (Acoustic Learning) Card
+            // 3. Privacy & Voice Gate (Don't Record Other Voices) Card
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isVoiceGateEnabled) 
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
+                    else 
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.VpnKey, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Privacy & Voice Gate", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        "Don't record other voices (§201 StGB compliance). Unverified third-party speech is held in a 10.24s circular RAM buffer and silently discarded without writing to disk.",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // Master Toggle
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Don't Record Other Voices", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text(
+                                if (isVoiceGateEnabled) "Active: Only authorized voice profiles are saved" else "Inactive: All detected speech is recorded",
+                                fontSize = 11.sp,
+                                color = if (isVoiceGateEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = isVoiceGateEnabled,
+                            onCheckedChange = {
+                                isVoiceGateEnabled = it
+                                speakerProfileManager.isVoiceGateEnabled = it
+                            }
+                        )
+                    }
+
+                    if (isVoiceGateEnabled) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Voice Match Strictness", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            Text(String.format("%.2f", voiceGateThreshold), fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                        Text(
+                            "Higher threshold requires closer acoustic match to your enrolled voice before audio is written.",
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Slider(
+                            value = voiceGateThreshold,
+                            onValueChange = {
+                                voiceGateThreshold = it
+                                speakerProfileManager.voiceGateConfidenceThreshold = it
+                            },
+                            valueRange = 0.50f..0.90f,
+                            steps = 7,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+
+            // 4. Voiceprints & Speaker Profiles (Acoustic Learning) Card
             Card(
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
@@ -1065,56 +1149,6 @@ fun SettingsScreen(
 
                     if (isSpeakersExpanded) {
                         Spacer(modifier = Modifier.height(14.dp))
-
-                        // Toggle Voice Gate (§201 StGB Privacy Filter)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.VpnKey, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Voice Gate (Authorized Voices Only)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                                }
-                                Text(
-                                    "Strictly filter audio and only persist speech matching authorized profiles (§201 StGB compliance)",
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Switch(
-                                checked = isVoiceGateEnabled,
-                                onCheckedChange = {
-                                    isVoiceGateEnabled = it
-                                    speakerProfileManager.isVoiceGateEnabled = it
-                                }
-                            )
-                        }
-
-                        if (isVoiceGateEnabled) {
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Voice Gate Confidence Threshold", fontSize = 12.sp)
-                                Text(String.format("%.2f", voiceGateThreshold), fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                            }
-                            Slider(
-                                value = voiceGateThreshold,
-                                onValueChange = {
-                                    voiceGateThreshold = it
-                                    speakerProfileManager.voiceGateConfidenceThreshold = it
-                                },
-                                valueRange = 0.50f..0.90f,
-                                steps = 7,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(10.dp))
 
                         // Toggle Speaker Recognition
                         Row(

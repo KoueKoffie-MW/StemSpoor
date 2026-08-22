@@ -13,12 +13,13 @@ import com.example.recme.service.VadRecordingService
 import com.example.recme.storage.StorageManager
 import com.example.recme.storage.TranscriptExporter
 import com.example.recme.ai.speaker.SpeakerDiarizationEngine
+import com.example.recme.ai.transcription.TranscriptionManager
 import com.example.recme.sync.SyncScheduler
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Background WorkManager task that transcribes pending recordings using on-device Whisper & Gemma.
+ * Background WorkManager task that transcribes pending recordings using dual local and cloud engines.
  */
 class TranscriptionWorker(
     context: Context,
@@ -26,33 +27,10 @@ class TranscriptionWorker(
 ) : CoroutineWorker(context, workerParams), KoinComponent {
 
     private val diarizationEngine: SpeakerDiarizationEngine by inject()
+    private val transcriptionManager: TranscriptionManager by inject()
 
     override suspend fun doWork(): Result {
-        Log.i(TAG, "Starting local multilingual transcription job...")
-
-        val downloadManager = ModelDownloadManager(applicationContext)
-        val whisperModel = if (downloadManager.isModelReady(AIModelType.WHISPER_LARGE_V3_TURBO)) {
-            AIModelType.WHISPER_LARGE_V3_TURBO
-        } else if (downloadManager.isModelReady(AIModelType.WHISPER_SMALL_INT8)) {
-            AIModelType.WHISPER_SMALL_INT8
-        } else {
-            Log.w(TAG, "No Whisper ASR model downloaded yet. Skipping transcription.")
-            val targetFileName = inputData.getString(EXTRA_FILE_NAME)
-            if (targetFileName != null) {
-                TranscriptionStateTracker.updateStatus(
-                    targetFileName,
-                    TranscriptionStatus.Failed("No Whisper model downloaded. Please download in Settings.")
-                )
-            }
-            return Result.success()
-        }
-
-        val encoderFile = downloadManager.getEncoderFile(whisperModel)
-        val decoderFile = downloadManager.getDecoderFile(whisperModel)
-        val vocabFile = downloadManager.getVocabFile(whisperModel)
-        val prefs = applicationContext.getSharedPreferences(VadRecordingService.PREFS_NAME, Context.MODE_PRIVATE)
-        val languageSet = prefs.getStringSet(KEY_ACTIVE_LANGUAGES, WhisperLanguageConfig.DEFAULT_LANGUAGES.toSet())?.toList()
-            ?: WhisperLanguageConfig.DEFAULT_LANGUAGES
+        Log.i(TAG, "Starting transcription job (${transcriptionManager.engineMode.displayName})...")
 
         val storageManager = StorageManager(applicationContext)
         val recordings = storageManager.listRecordings()
@@ -71,15 +49,7 @@ class TranscriptionWorker(
             return Result.success()
         }
 
-        var whisperEngine: WhisperEngine? = null
         try {
-            whisperEngine = WhisperEngine(
-                encoderFile = encoderFile,
-                decoderFile = decoderFile,
-                vocabFile = vocabFile,
-                activeLanguages = languageSet
-            )
-
             for (item in pendingRecordings) {
                 val sidecar = item.sidecarData ?: continue
                 val jsonFile = item.jsonFile ?: continue
@@ -98,7 +68,8 @@ class TranscriptionWorker(
                     TranscriptionStatus.Transcribing(0, sidecar.segments.size, 0.05f)
                 )
 
-                val transcribedSegments = whisperEngine.transcribeSegments(
+                // 1. Run Dual-Engine Transcription (Local SenseVoice/Whisper or Cloud Gemini)
+                val polishedSegments = transcriptionManager.transcribeRecording(
                     item.audioFile,
                     sidecar.segments
                 ) { cur, total ->
@@ -109,15 +80,12 @@ class TranscriptionWorker(
                     )
                 }
 
-                TranscriptionStateTracker.updateStatus(audioFileName, TranscriptionStatus.Polishing())
-                val polishedSegments = GemmaPostProcessor.polishSegments(transcribedSegments)
-
                 val languagesDetected = polishedSegments.mapNotNull { it.detectedLanguage }.distinct()
 
-                // 1. Update sidecar JSON
+                // 2. Update sidecar JSON
                 val updatedSidecar = TranscriptExporter.updateSidecarJson(jsonFile, polishedSegments, languagesDetected)
 
-                // 2. Export Obsidian Markdown Note (.md) and update Vault
+                // 3. Export Obsidian Markdown Note (.md) and update Vault
                 if (updatedSidecar != null) {
                     val vaultManager = com.example.recme.vault.VaultManager(applicationContext)
                     TranscriptExporter.exportToObsidianMarkdown(item.audioFile, updatedSidecar)
@@ -127,7 +95,7 @@ class TranscriptionWorker(
 
                 TranscriptionStateTracker.updateStatus(audioFileName, TranscriptionStatus.Completed)
 
-                // 3. Trigger Google Drive Cloud Sync to upload .md and updated .json
+                // 4. Trigger Google Drive Cloud Sync to upload .md and updated .json
                 SyncScheduler.scheduleImmediateSync(applicationContext)
             }
 
@@ -142,8 +110,6 @@ class TranscriptionWorker(
                 )
             }
             return Result.failure()
-        } finally {
-            whisperEngine?.close()
         }
     }
 

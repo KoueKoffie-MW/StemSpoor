@@ -2,7 +2,7 @@
 
 **Master Plan:** [MODERNIZATION_PLAN.md](../../MODERNIZATION_PLAN.md)  
 **Created:** 2026-08-22  
-**Last Updated:** 2026-08-22 (MOD-03 Completed)
+**Last Updated:** 2026-08-22 (MOD-04 Completed)
 
 ---
 
@@ -13,8 +13,8 @@
 | **MOD-01** | Foundations (Room 2.7.2, KSP, DAOs, Koin DI) | Phase 1 | Critical | **Completed** | [MOD-01-PHASE1-Foundations.md](MOD-01-PHASE1-Foundations.md) |
 | **MOD-02** | Voice Gate & Legal Consent (§201 StGB, 10s Circular Buffer) | Phase 2a | Critical | **Completed** | [MOD-02-VoiceGate-Privacy-Legal.md](MOD-02-VoiceGate-Privacy-Legal.md) |
 | **MOD-03** | Speaker Diarization & Embeddings (SpeakerDiarizationEngine) | Phase 2b | High | **Completed** | [MOD-03-Speaker-Embeddings.md](MOD-03-Speaker-Embeddings.md) |
-| **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini) | Phase 2c | **High (Next)** | **Approved (Ready)** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
-| **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2d | Med-High | **Approved (Ready)** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
+| **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini Flash) | Phase 2c | High | **Completed** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
+| **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2d | **Med-High (Next)** | **Approved (Ready)** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
 | **MOD-06** | Modular Architecture (8 Gradle Modules Extraction) | Phase 3 | Medium-High | **Deferred to Phase 3** | [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) |
 | **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 4 | Medium | **Approved (Ready)** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
 | **MOD-08** | Storage Integrity Watchdog & Auto-Repair | Phase 5 | Medium | **Approved (Ready)** | [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) |
@@ -32,7 +32,7 @@
 ---
 
 ### 📝 Phase 2c: MOD-04 Dual Transcription Pipeline
-* [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) — Level 1 Overview
+* [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) — Level 1 Overview (Completed)
   * [MOD-04a-Dual-ASR-Design-Decisions.md](MOD-04/MOD-04a-Dual-ASR-Design-Decisions.md) — Level 2 Offline vs Cloud User Choice
   * [MOD-04b-SenseVoice-Whisper-Local-Pipeline.md](MOD-04/MOD-04b-SenseVoice-Whisper-Local-Pipeline.md) — Level 3 On-Device SenseVoice-Small ASR
   * [MOD-04c-Gemini-Cloud-Audio-Studio-Pipeline.md](MOD-04/MOD-04c-Gemini-Cloud-Audio-Studio-Pipeline.md) — Level 3 Google AI Studio Flash Integration

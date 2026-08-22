@@ -55,6 +55,9 @@ val appModule = module {
     single<ConfigRepository> { ConfigRepositoryImpl(get()) }
 
     // AI & Voice Gate Engines
+    single { com.example.recme.ai.models.ModelDownloadManager(androidContext()) }
+    single { com.example.recme.ai.gemini.GeminiAudioTranscriber(androidContext()) }
+    single { com.example.recme.ai.transcription.TranscriptionManager(androidContext(), get(), get()) }
     single { com.example.recme.ai.speaker.SpeakerEmbeddingEngine(androidContext()) }
     single { com.example.recme.ai.speaker.SpeakerDiarizationEngine(androidContext(), get(), get(), get(), get()) }
     single { com.example.recme.ai.voicegate.VoiceGateEvaluator(get(), get(), get(), get()) }

@@ -356,8 +356,33 @@ fun SettingsScreen(
                         }
                     }
 
+                    // Option 3: Smart Hybrid (Cloud + Local Fallback)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedEngine = GeminiAudioTranscriber.ENGINE_SMART_HYBRID
+                                prefs.edit().putString(GeminiAudioTranscriber.KEY_TRANSCRIPTION_ENGINE, GeminiAudioTranscriber.ENGINE_SMART_HYBRID).apply()
+                            }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedEngine == GeminiAudioTranscriber.ENGINE_SMART_HYBRID,
+                            onClick = {
+                                selectedEngine = GeminiAudioTranscriber.ENGINE_SMART_HYBRID
+                                prefs.edit().putString(GeminiAudioTranscriber.KEY_TRANSCRIPTION_ENGINE, GeminiAudioTranscriber.ENGINE_SMART_HYBRID).apply()
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text("Smart Hybrid (Cloud + Local Fallback)", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                            Text("Uses Gemini Flash when online; seamlessly falls back to on-device when offline", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    }
+
                     // Gemini API Key Configuration Section
-                    if (selectedEngine == GeminiAudioTranscriber.ENGINE_GEMINI_CLOUD) {
+                    if (selectedEngine == GeminiAudioTranscriber.ENGINE_GEMINI_CLOUD || selectedEngine == GeminiAudioTranscriber.ENGINE_SMART_HYBRID) {
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text("Select Gemini Cloud Model:", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)

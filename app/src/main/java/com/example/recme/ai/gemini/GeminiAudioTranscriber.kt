@@ -432,6 +432,7 @@ class GeminiAudioTranscriber(private val context: Context) {
         const val KEY_TRANSCRIPTION_ENGINE = "key_transcription_engine"
         const val ENGINE_ON_DEVICE = "on_device"
         const val ENGINE_GEMINI_CLOUD = "gemini_cloud"
+        const val ENGINE_SMART_HYBRID = "smart_hybrid"
 
         // Free-tier API keys are limited to 20 requests per minute (~3s per call).
         // We enforce a minimum delay between segment API calls to avoid HTTP 429.

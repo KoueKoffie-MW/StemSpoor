@@ -57,6 +57,25 @@ class AudioCaptureEngine(
     val engineState: StateFlow<AudioEngineState> = _engineState.asStateFlow()
 
     private var vadStateMachine: VadStateMachine? = null
+    @Volatile
+    private var isPaused: Boolean = false
+
+    /**
+     * Pauses audio processing during active phone call interruptions.
+     */
+    fun pauseCapture() {
+        isPaused = true
+        vadStateMachine?.flushAndReset(System.currentTimeMillis())
+        android.util.Log.i("AudioCaptureEngine", "Audio capture paused for call interruption")
+    }
+
+    /**
+     * Resumes audio processing after phone call finishes.
+     */
+    fun resumeCapture() {
+        isPaused = false
+        android.util.Log.i("AudioCaptureEngine", "Audio capture resumed after call interruption")
+    }
 
     /**
      * Updates the VAD sensitivity threshold (0.1 to 0.95).
@@ -241,6 +260,12 @@ class AudioCaptureEngine(
             var frameCount = 0
 
             while (isActive) {
+                if (isPaused) {
+                    kotlinx.coroutines.delay(150)
+                    readOffset = 0
+                    continue
+                }
+
                 val samplesNeeded = AudioConstants.FRAME_SIZE_SAMPLES - readOffset
                 val samplesRead = record.read(frame, readOffset, samplesNeeded)
 

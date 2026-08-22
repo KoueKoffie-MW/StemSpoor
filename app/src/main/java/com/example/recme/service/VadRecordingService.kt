@@ -40,6 +40,7 @@ class VadRecordingService : Service(), KoinComponent {
     private val storageManager: StorageManager by inject()
 
     private var audioCaptureEngine: AudioCaptureEngine? = null
+    private var callWatchdog: com.example.recme.audio.CallInterruptionWatchdog? = null
     private var wakeLock: PowerManager.WakeLock? = null
     private val scope = CoroutineScope(Dispatchers.Main)
     private var stateObserverJob: Job? = null
@@ -126,6 +127,17 @@ class VadRecordingService : Service(), KoinComponent {
         _isServiceRunning.value = true
         saveRecordingState(true)
 
+        // Telephony Call Watchdog (MOD-07)
+        callWatchdog = com.example.recme.audio.CallInterruptionWatchdog(
+            context = this,
+            onCallStarted = {
+                audioCaptureEngine?.pauseCapture()
+            },
+            onCallEnded = {
+                audioCaptureEngine?.resumeCapture()
+            }
+        ).also { it.startWatching() }
+
         // Observe engine state for notifications & UI
         stateObserverJob = scope.launch {
             engine.engineState.collect { state ->
@@ -140,6 +152,9 @@ class VadRecordingService : Service(), KoinComponent {
     }
 
     private fun stopRecordingService() {
+        callWatchdog?.stopWatching()
+        callWatchdog = null
+
         stateObserverJob?.cancel()
         stateObserverJob = null
 

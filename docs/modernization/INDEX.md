@@ -2,7 +2,7 @@
 
 **Master Plan:** [MODERNIZATION_PLAN.md](../../MODERNIZATION_PLAN.md)  
 **Created:** 2026-08-22  
-**Last Updated:** 2026-08-22 (MOD-05 Completed)
+**Last Updated:** 2026-08-22 (MOD-07 Completed)
 
 ---
 
@@ -16,8 +16,8 @@
 | **MOD-04** | Dual Transcription Pipeline (Local SenseVoice + Cloud Gemini Flash) | Phase 2c | High | **Completed** | [MOD-04-Transcription-Pipeline.md](MOD-04-Transcription-Pipeline.md) |
 | **MOD-05** | Local Semantic Search & Vault Intelligence (Vector + FTS5) | Phase 2d | High | **Completed** | [MOD-05-Semantic-Search-Vault.md](MOD-05-Semantic-Search-Vault.md) |
 | **MOD-06** | Modular Architecture (8 Gradle Modules Extraction) | Phase 3 | Medium-High | **Deferred to Phase 3** | [MOD-06-Modular-Architecture.md](MOD-06-Modular-Architecture.md) |
-| **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 4 | **Medium (Next)** | **Approved (Ready)** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
-| **MOD-08** | Storage Integrity Watchdog & Auto-Repair | Phase 5 | Medium | **Approved (Ready)** | [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) |
+| **MOD-07** | UX & System Integration (Quick Settings Tile, Call Interruption) | Phase 4 | Medium | **Completed** | [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) |
+| **MOD-08** | Storage Integrity Watchdog & Auto-Repair | Phase 5 | **Medium (Next)** | **Approved (Ready)** | [MOD-08-Ops-CI-Reliability.md](MOD-08-Ops-CI-Reliability.md) |
 
 ---
 
@@ -55,7 +55,7 @@
 ---
 
 ### 📱 Phase 4: MOD-07 UX & System Integration
-* [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) — Level 1 Overview
+* [MOD-07-UX-Platform.md](MOD-07-UX-Platform.md) — Level 1 Overview (Completed)
   * [MOD-07a-Quick-Settings-Tile-and-Call-Interruption.md](MOD-07/MOD-07a-Quick-Settings-Tile-and-Call-Interruption.md) — Level 2/3 Quick Settings Tile & Telephony Watchdog
 
 ---

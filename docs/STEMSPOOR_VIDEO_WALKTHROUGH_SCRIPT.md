@@ -1,152 +1,160 @@
-# 🎬 StemSpoor — Amptelike Video Walkthrough & Bemarkingskrip
+# 🎬 StemSpoor — Official Video Walkthrough & Marketing Demo Script
 
-**Titel-idee:** *StemSpoor: Die Privaat Kognitiewe Brein vir Ingenieurs (Volledige Funksie-Toets & Oorsig)*  
-**Aanbieder:** Jan  
-**Tydsduur:** ~10–12 minute  
-**Formaat:** Skermopname (Android-toestel + Obsidian op rekenaar) gekombineer met 'n praatkop/kamera-opstelling.
-
----
-
-## 🎯 Doelwitte van die Video
-1. **Regte Funksietoets:** Bewys dat elke stelsel (VAD, Voice Gate, Diarization, Dual ASR, Semantiese Soektog, Waghond) foutloos intyds werk.
-2. **Bemarking & Waardeproposisie:** Verduidelik *hoekom* StemSpoor radikaal verskil van gewone stemopnemers (Privaatheid, §201 StGB voldoening, Plaaslike Vektore, Obsidian Vault-integrasie).
-3. **Outentieke Ingenieurs-narratief:** 'n Pragmatiese, reguit demonstrasie gebou op die *Boer Maak 'n Plan*-etos.
+**Suggested Title:** *StemSpoor: The Private Cognitive Brain for Engineers (Full Feature Test & Demo)*  
+**Presenter:** Jan  
+**Duration:** ~10–12 minutes  
+**Format:** Screen recording (Android device + Obsidian on desktop) combined with webcam / talking-head camera setup.
 
 ---
 
-## 📋 Produksie-Oorsig & Toneelrooster
+## 🎯 Video Objectives
+1. **Live Technical Verification:** Prove that every subsystem (Silero VAD, Voice Gate, Speaker Diarization, Dual ASR, Local Vector Search, Storage Watchdog) operates reliably in real time.
+2. **Value Proposition & Marketing:** Clearly articulate *why* StemSpoor is fundamentally different from conventional voice recorders (Legal §201 StGB privacy by design, zero-cloud dependency, local dense embeddings, Obsidian Vault integration).
+3. **Authentic Engineer Narrative:** A pragmatic, candid demonstration rooted in engineering rigor, self-reliance, and radical privacy.
+
+---
+
+## 📋 Production Overview & Scene Timeline
 
 ```
-[00:00 - 01:15]  Toneel 1: Die Haakplek & Die Probleem (Privaatheid vs. Geheue)
-[01:15 - 02:45]  Toneel 2: 1-Tik Quick Settings Tile & Silero VAD Agtergrond-Monitering
-[02:45 - 04:30]  Toneel 3: Voice Gate & Die 10-Sekonde Wagbuffer (§201 StGB Toets)
-[04:30 - 05:45]  Toneel 4: Telefoonoproep-Waghond (Outo-Pouse & Hervat)
-[05:45 - 07:15]  Toneel 5: Spreker-Diarization & Aaneenlopende Stemprofiel-Leer
-[07:15 - 09:00]  Toneel 6: Dubbele Transkripsie (Vanlyn SenseVoice vs. Wolk Gemini Flash)
-[09:00 - 10:15]  Toneel 7: Obsidian Vault & Plaaslike Semantiese Vektor-Soektog
-[10:15 - 11:15]  Toneel 8: Berging-Integriteit Waghond (Outo-Herstel Toets)
-[11:15 - 12:00]  Toneel 9: Afsluiting & Visie
+[00:00 - 01:15]  Scene 1: The Hook & The Problem (Memory vs. Strict Privacy Laws)
+[01:15 - 02:45]  Scene 2: 1-Tap Quick Settings Tile & Silero VAD Ambient Listening
+[02:45 - 04:30]  Scene 3: Voice Gate & The 10-Second Circular RAM Buffer (§201 StGB Live Test)
+[04:30 - 05:45]  Scene 4: Telephony Call Watchdog (Auto-Pause & Seamless Resume)
+[05:45 - 07:15]  Scene 5: Speaker Diarization & Continuous Voiceprint Adaptation
+[07:15 - 09:00]  Scene 6: Dual Transcription Pipeline (Offline SenseVoice vs. Cloud Gemini Flash)
+[09:00 - 10:15]  Scene 7: Obsidian Vault Integration & Local 384-d Semantic Vector Search
+[10:15 - 11:15]  Scene 8: Storage Integrity Watchdog (WAV Header Auto-Repair & Room Sync)
+[11:15 - 12:00]  Scene 9: Conclusion & Open Source Call to Action
 ```
 
 ---
 
-## 🎥 Toneel-vir-Toneel Draaiboek
+## 🎥 Scene-by-Scene Script
 
-### Toneel 1: Die Haakplek & Die Probleem (00:00 – 01:15)
-* **Visueel:** Kamera op Jan by sy lessenaar met sy foon langs sy rekenaar. Op die rekenaarskerm is 'n komplekse simulasie/argitektuurmodel oop.
-* **Teks op Skerm:** `StemSpoor: Private Ambient Voice Intelligence`
+### Scene 1: The Hook & The Problem (00:00 – 01:15)
+* **Visual:** Camera on Jan at his engineering desk. The phone is resting next to the workstation. On the main monitor, an automotive / Simscape model or Obsidian graph is visible.
+* **On-Screen Title:** `StemSpoor: Private Ambient Voice Intelligence`
 
-> **Jan (Spraak):**  
-> *"As ingenieur en pa is my gedagtes heeldag vol idees, besluite en tegniese gesprekke. Maar die oomblik as jy 'n goeie idee hardop sê terwyl jy ry of stap, is dit binne vyf minute vergete.*  
+> **Jan (Spoken):**  
+> *"As an engineer and father, my mind is constantly moving through ideas, system architectures, and technical decisions. But whenever you articulate a breakthrough thought while walking, driving, or working, it’s often lost within five minutes.*  
 >  
-> *Tradisionele stemnotas werk nie – jy vergeet om op te neem, die lêers hoop net op, en bowenal: in Duitsland en Europa het jy te doen met streng privaatheidswette soos §201 StGB. Jy mág nie net mense om jou sonder toestemming opneem nie.*  
+> *Traditional voice recording apps fail for two reasons: First, the friction of manually opening an app and pressing record means you rarely do it. Second—and critically here in Germany and the EU—you face strict privacy regulations like Section 201 of the German Criminal Code (§201 StGB). You cannot legally or ethically record conversations or ambient speech of people around you without consent.*  
 >  
-> *Daarom het ek **StemSpoor** gebou. Dit is nie net 'n opnemer nie; dit is 'n privaat, plaaslike kognitiewe brein wat jou stem herken, vreemdelinge se privaatheid wetlik beskerm, en outomaties jou daaglikse notas in Obsidian struktureer. Kom ek wys jou presies hoe elke funksie werk."*
+> *That is why I built **StemSpoor**. It is not just an audio recorder; it is a private, on-device cognitive brain that verifies your voice before anything touches storage, respects ambient privacy mathematically, and automatically turns your thoughts into a structured Obsidian knowledge graph. Let me show you how every single feature works under the hood."*
 
 ---
 
-### Toneel 2: 1-Tik Quick Settings Tile & Silero VAD (01:15 – 02:45)
-* **Visueel:** Skermopname van die Android-foon. Jan vee van bo af af om die Quick Settings-paneel te wys. Hy tik op die **StemSpoor Mic Tile**.
-* **Aksie:** Die Tile skakel dadelik oor na `StemSpoor Active (Recording active)`. Die app maak oop op die Hoofskerm met die Kalahari-sonsondergang golfvorm-visualiseerder.
+### Scene 2: 1-Tap Quick Settings Tile & Silero VAD (01:15 – 02:45)
+* **Visual:** Android screen recording. Jan swipes down the Android notification shade and taps the **StemSpoor Mic Tile**.
+* **Action:** The tile flips from inactive to `StemSpoor Active (Recording active)`. Jan opens the app to show the Kalahari sunset waveform visualizer responding to voice.
 
-> **Jan (Spraak):**  
-> *"Eerstens: Geen wrywing nie. Ek hoef nie eers die app oop te maak nie. Vanuit my Android Quick Settings tik ek een keer op die **StemSpoor Tile**.*  
+> **Jan (Spoken):**  
+> *"First: zero friction. I don't even need to open the app. From my Android Quick Settings shade, I tap the **StemSpoor Tile** once.*  
 >  
-> *In die agtergrond hardloop **Silero VAD** (Voice Activity Detection). Kyk wat gebeur as ek stilbly... die mikrofoon luister slegs in RAM teen 16kHz, maar skryf geen leë stilte na die skyf nie. Sodra ek begin praat, lig die Kalahari-sonsondergang visualisering op en begin die oudio intyds verwerk. Dit spaar gigagrepe berging en hou batteryverbruik minimaal."*
+> *Under the hood, **Silero VAD** (Voice Activity Detection) is running 24/7 in a foreground service. Notice what happens when I stay silent... the microphone captures raw 16kHz audio in RAM, but zero bytes of empty silence are written to disk. The moment I speak, the Kalahari sunset waveform illuminates instantly and begins capturing.*  
+>  
+> *This eliminates gigabytes of dead air, cuts battery consumption to near zero, and ensures you capture only genuine speech."*
 
 ---
 
-### Toneel 3: Voice Gate & Die 10-Sekonde Wagbuffer (§201 StGB) (02:45 – 04:30)
-* **Visueel:** Jan gaan na `Settings` $\rightarrow$ `Voice Gate & Legal Privacy`. Hy wys die geaktiveerde Voice Gate en sy eie ingeskrewe stemprofiel.
-* **Toets-aksie:** 
-  1. Jan praat self: Die skerm wys `Voice Gate: ALLOWED (Jan - 0.91 confidence)`.
-  2. Jan speel 'n stemgreep van 'n vreemde stem op 'n tweede toestel: Die skerm wys `Voice Gate: DENIED (Unauthorized voice discarded)`.
+### Scene 3: Voice Gate & The 10-Second Circular RAM Buffer (§201 StGB) (02:45 – 04:30)
+* **Visual:** Navigate to `Settings` $\rightarrow$ `Voice Gate & Legal Privacy`. Show the enrolled profile (`Jan`) with consent switches.
+* **Live Test:**
+  1. **Authorized Voice:** Jan speaks directly into the phone: Screen displays `Voice Gate: ALLOWED (Jan - 0.91 confidence)`.
+  2. **Unauthorized Voice:** Jan plays an unauthorized voice snippet from a secondary speaker: Screen displays `Voice Gate: DENIED (Unauthorized voice discarded)`.
 
-> **Jan (Spraak):**  
-> *"Hier is die deurbraak vir privaatheid: **Die Voice Gate**. Onder Artikel 201 van die Duitse Strafwetboek is dit onwettig om vertroulike spraak van derdepartye sonder toestemming vas te lê.*  
+> **Jan (Spoken):**  
+> *"Now for the core privacy innovation: **The Voice Gate**.*  
 >  
-> *StemSpoor los dit op met 'n **10.24-sekonde sirkulêre RAM-wagbuffer**. Wanneer klank begin, word dit slegs in vlugtige geheue gehou. Die AI-enjin onttrek 'n 192-dimensionele akoestiese inbedding en vergelyk dit met my gemagtigde stemprofiel.*  
+> *Under §201 StGB in Germany, capturing third-party speech without explicit consent is a criminal offense. Most ambient recorders ignore this. StemSpoor solves it architecturally using a **10.24-second pre-allocated circular RAM buffer**.*  
 >  
-> *As dit ek is – word die buffer terugwerkend na die WAV-lêer geskryf. As 'n vreemdeling praat wat nie toestemming gegee het nie – word die hele klankgreep stilweg uit die geheue gegooi sonder dat 'n enkele greep ooit die skyf tref. Dis wetlike voldoening deur wiskunde en argitektuur."*
+> *When speech is detected, the audio remains strictly in volatile memory while our neural embedding engine extracts a 192-dimensional acoustic timbre vector and computes cosine similarity against my enrolled voice profile.*  
+>  
+> *If the speaker is verified as me—the buffer is retroactively flushed to the WAV recording. But if an unauthorized third party speaks—the entire audio buffer is silently purged from memory. Not a single byte is ever committed to disk. That is legal compliance guaranteed by math, not policies."*
 
 ---
 
-### Toneel 4: Telefoonoproep-Waghond (04:30 – 05:45)
-* **Visueel:** 'n Inkomende oproep verskyn op die foon. 
-* **Aksie:** Die opname fluit dadelik die huidige WAV-deel skoon af en gaan in `PAUSED (Call in progress)` modus. Wanneer die oproep afgelui word, hervat StemSpoor outomaties sonder enige gebruikersaksie.
+### Scene 4: Telephony Call Watchdog (04:30 – 05:45)
+* **Visual:** An incoming phone call notification triggers on screen.
+* **Action:** The recording engine immediately finalizes the current audio chunk, releases the microphone hardware, and sets state to `PAUSED (Call in progress)`. When the call ends, StemSpoor resumes capturing automatically.
 
-> **Jan (Spraak):**  
-> *"Wat gebeur as iemand jou bel terwyl StemSpoor opneem? Ons **Telephony Call Interruption Watchdog** monitor stelsel-oproepe.*  
+> **Jan (Spoken):**  
+> *"What happens when an actual phone call arrives while StemSpoor is listening?*  
 >  
-> *Sodra die foon lui, word die mikrofoon dadelik vrygestel vir die oproep, en die huidige oudio-segment word netjies afgesluit. Sodra jy ophang, skakel StemSpoor dadelik weer aan. Jy hoef nooit te onthou om jou opname weer te begin nie."*
+> *Our **Telephony Call Interruption Watchdog** listens to Android's call state. The instant the phone rings or an outgoing call begins, the current audio part is cleanly finalized and closed, freeing the microphone hardware completely for the phone call.*  
+>  
+> *As soon as you hang up, StemSpoor automatically detects the idle state and resumes background listening without requiring any user interaction. You never have to remember to turn your recorder back on."*
 
 ---
 
-### Toneel 5: Spreker-Diarization & Aaneenlopende Leer (05:45 – 07:15)
-* **Visueel:** Jan wys die `Recordings`-oortjie waar 'n opname met twee persone pas voltooi is.
-* **Aksie:** Hy maak die `.json` sidecar oop: Segmente word outomaties gemerk as `Jan` en `Speaker 2`.
+### Scene 5: Multi-Speaker Diarization & Continuous Adaptation (05:45 – 07:15)
+* **Visual:** Open the `Recordings` screen. Select a multi-person conversation. Show the companion `.json` sidecar.
+* **Action:** Segments are neatly partitioned and labeled with speaker IDs (`Jan`, `Speaker 2`) and confidence scores.
 
-> **Jan (Spraak):**  
-> *"Sodra 'n opname voltooi is, tree ons vanlyn **Speaker Diarization Engine** in werking. Dit sny die spraak in oorvleuelende vensters op en groepeer wie wanneer gepraat het.*  
+> **Jan (Spoken):**  
+> *"Once an audio recording session is finalized, our offline **Speaker Diarization Engine** takes over in the background. It analyzes overlapping audio windows, groups speaker turns using acoustic timbre clustering, and tags who spoke when.*  
 >  
-> *Wat meer is: StemSpoor het **aaneenlopende leer**. As ek in Afrikaans, Engels of Duits praat, pas die stelsel outomaties my globale en taalsensitiewe stem-sentroïede aan. Hoe meer ek die app gebruik, hoe skerper word sy herkenning."*
+> *Even better: StemSpoor features **continuous voiceprint adaptation**. Whether I am speaking Afrikaans, English, or German, every time a segment matches my profile with high confidence ($\ge 84\%$), it updates my multi-language voice centroids using exponential moving averages. The more I use the app, the sharper its recognition becomes."*
 
 ---
 
-### Toneel 6: Dubbele Transkripsie-Pyplyn (07:15 – 09:00)
-* **Visueel:** Jan wys die `Settings`-skerm met die 3 transkripsiekeuses: `Local Only`, `Google AI Studio`, en `Smart Hybrid`.
-* **Aksie:** 
-  1. Hy wys 'n vanlyn transkripsie met **SenseVoice-Small** (ultra-vinnig op SVE).
-  2. Hy wissel na **Smart Hybrid** met sy Google AI Studio API-sleutel: Wys hoe **Gemini 2.5 Flash** die klank transkribeer én 'n bondige opsomming met aksie-items skep.
+### Scene 6: Dual Transcription Pipeline (07:15 – 09:00)
+* **Visual:** Navigate to `Settings` $\rightarrow$ `AI Models & Transcription Engine`. Show the 3 modes: `Local Only (Private Offline)`, `Google AI Studio (Gemini Flash)`, and `Smart Hybrid`.
+* **Action:**
+  1. Show offline on-device transcription running on CPU via **SenseVoice-Small** (15x real-time).
+  2. Switch to **Smart Hybrid** with Google AI Studio API key: Demonstrate Gemini Flash producing structured JSON with verbatim transcripts, executive summary, and action items checklist.
 
-> **Jan (Spraak):**  
-> *"Vir transkripsie gee StemSpoor jou die beste van beide wêrelde met die **Dual Transcription Pipeline**.*  
+> **Jan (Spoken):**  
+> *"For speech-to-text, StemSpoor gives you complete control through our **Dual Transcription Pipeline**.*  
 >  
-> *As jy 100% vanlyn wil bly sonder dat enige greep jou foon verlaat, gebruik ons die hoëspoed **SenseVoice-Small** en Whisper-modelle. Dit hardloop direk op jou SVE teen 15x intydse spoed en hanteer Afrikaanse taalmenging soos 'n droom.*  
+> *If you require 100% offline privacy where no data ever leaves your hardware, the local engine uses **SenseVoice-Small** and Whisper INT8. It runs directly on the CPU at 15x real-time speed, with remarkable accuracy across multilingual code-switching.*  
 >  
-> *As jy internet het en dieper insigte soek, kies jy **Smart Hybrid**. Dit stuur die klank na Google AI Studio se **Gemini Flash**, wat nie net letterlik transkribeer nie, maar ook dadelik 'n opsomming, besluitelys en aksiepunte uittrek."*
+> *If you're online and want deeper synthesis, select **Smart Hybrid**. It routes the audio directly to Google AI Studio's **Gemini 2.5 Flash**, returning not just a verbatim transcript, but an executive summary, key decisions, and actionable markdown checkboxes in one shot."*
 
 ---
 
-### Toneel 7: Obsidian Vault & Semantiese Vektor-Soektog (09:00 – 10:15)
-* **Visueel:** Jan skuif na sy rekenaar en wys sy **Obsidian Vault**. Die daaglikse nota (`2026-08-22.md`) is reeds opgedateer met tydstempels, spreker-etikette en `[[Wikilinks]]`.
-* **Aksie op Foon:** Jan gaan na die `Vault`-oortjie in StemSpoor en soek na 'n konsep: *"wiel dinamika en skorsing"*.
-* **Resultaat:** Die soekenjin bring die spesifieke opname na bo met 'n `94% SEMANTIC_CONCEPT` passing, al het die opname net gepraat van *"Simscape Multibody suspensie-toets"*.
+### Scene 7: Obsidian Vault & Local 384-d Semantic Search (09:00 – 10:15)
+* **Visual:** Switch view to the desktop monitor showing the **Obsidian Vault**. The Daily Note (`2026-08-22.md`) contains the new transcription, timestamps, speaker tags, and `[[Wikilinks]]`.
+* **Action on Phone:** Open the `Vault` tab in StemSpoor. In the search bar, search for a conceptual phrase: *"wheel dynamics and damper tuning"*.
+* **Result:** The search engine immediately ranks the relevant note at `94% SEMANTIC_CONCEPT` match, even though the spoken words were *"Simscape Multibody suspension test"*.
 
-> **Jan (Spraak):**  
-> *"Elke voltooide transkripsie word outomaties uitgevoer na jou plaaslike **Obsidian Vault** met skoon Markdown en tweerigting `[[Wikilinks]]`.*  
+> **Jan (Spoken):**  
+> *"Every transcript is exported into your personal **Obsidian Vault** with clean Markdown formatting and bidirectional `[[Wikilinks]]`.*  
 >  
-> *Maar die ware towerkrag is ons **Hybrid Semantic Search Engine**. Ons stoor 384-dimensionele BGE-vektore direk in die plaaslike SQLite-databasis. As ek soek na 'n konsep, soek dit nie net na presiese woorde nie – dit verstaan die wiskundige betekenis van my woorde en vind die regte stemnota onmiddellik."*
+> *To search your thoughts, we implemented a **Hybrid Semantic Search Engine**. We compute 384-dimensional dense BGE vector embeddings and store them directly in SQLite. When I search for a concept, it doesn't just match exact keywords—it understands semantic meaning and retrieves the exact thought instantly, completely offline."*
 
 ---
 
-### Toneel 8: Berging-Integriteit Waghond (10:15 – 11:15)
-* **Visueel:** Jan forseer die app om toe te maak (Force Stop in Android-instellings) terwyl 'n opname loop.
-* **Aksie:** Hy heropen StemSpoor. Die logs wys: `StorageIntegrityWatchdog: Repaired WAV header in-place (DataSize corrected), Room SQLite resynced`. Die oudio speel perfek af sonder korrupsie!
+### Scene 8: Storage Integrity Watchdog & In-Place Auto-Repair (10:15 – 11:15)
+* **Visual:** Go to Android App Settings and hit **Force Stop** while a recording is actively capturing.
+* **Action:** Re-open StemSpoor. Show log output: `StorageIntegrityWatchdog: Repaired WAV header in-place (DataSize corrected), Room SQLite resynced`. Open the recording and play it back—the audio plays cleanly from start to finish.
 
-> **Jan (Spraak):**  
-> *"As ingenieurs bou ons vir mislukking. Wat gebeur as jou foon se battery vrek of die stelsel die app doodmaak terwyl jy opneem? Gewoonlik is die WAV-lêer korrup en onbruikbaar.*  
+> **Jan (Spoken):**  
+> *"In engineering, you design for failure. What happens if your phone battery dies or the OS kills the app during a recording? Normally, an unfinalized WAV file has corrupt header sizes and is unplayable.*  
 >  
-> *StemSpoor het 'n ingeboude **Storage Integrity Watchdog**. Met die volgende herbegin inspekteer dit elke lêer, herstel die 44-greep RIFF-kopskrif intyds sonder om oudio te verloor, en hersinkroniseer die databasis. Jou data is altyd veilig."*
+> *StemSpoor includes an autonomous **Storage Integrity Watchdog**. On app startup, it inspects every WAV file on disk, recalculates the exact PCM byte length, repairs the 44-byte RIFF header in-place, and resynchronizes Room SQLite. Your recorded data is immune to unexpected termination."*
 
 ---
 
-### Toneel 9: Afsluiting & Oproep tot Aksie (11:15 – 12:00)
-* **Visueel:** Jan terug op kamera met die StemSpoor-logo en GitHub-skakel op die skerm.
-* **Teks op Skerm:** `Open Source. Private. Built for Thinkers.`
+### Scene 9: Conclusion & Call to Action (11:15 – 12:00)
+* **Visual:** Jan on camera with the StemSpoor GitHub repository and Kalahari Sunset logo displayed on screen.
+* **On-Screen Text:** `Open Source. Zero Cloud Lock-in. Built for Engineers.`
 
-> **Jan (Spraak):**  
-> *"StemSpoor is nie net 'n toepassing nie – dit is 'n betroubare verlengstuk van hoe ek dink, werk en my daaglikse lewe organiseer. Geen maandelikse intekeninge nie, geen wolk-dwang nie, en volle eienaarskap van jou data.*  
+> **Jan (Spoken):**  
+> *"StemSpoor is more than just an app—it is an external cognitive brain that protects your privacy, captures your spontaneous thinking, and turns your spoken words into structured, searchable knowledge.*  
 >  
-> *Die projek is oopbron en beskikbaar op GitHub. Bou dit, toets dit self, en maak jou stem 'n blywende spoor. Dankie dat julle gekyk het!"*
+> *No subscriptions, no cloud lock-in, and 100% data ownership. The entire codebase is open source on GitHub.*  
+>  
+> *Clone it, build it, and take control of your voice trace. Thanks for watching!"*
 
 ---
 
-## 🛠️ Toets-Kontrolelys voor Opname
+## 🛠️ Pre-Recording Checklist
 
-- [ ] Installeer nuutste APK (`assembleDebug` / `main`).
-- [ ] Bevestig mikrofoon- en bergingstoegangsregte op toetsfoon.
-- [ ] Skryf 1 stemprofiel in (`Jan`) onder Settings.
-- [ ] Toets Quick Settings Tile aan/af skakeling.
-- [ ] Maak seker Google AI Studio API-sleutel is ingevoer vir die Gemini-demo.
-- [ ] Koppel die foon se `Documents/RecMe/vault` aan Obsidian om die regstreekse Markdown-opdaterings te wys.
+- [ ] Install latest APK build (`main` / `assembleDebug`).
+- [ ] Grant Microphone and All Files Storage permissions on test phone.
+- [ ] Enroll 1 speaker profile (`Jan`) under Settings $\rightarrow$ Voice Gate.
+- [ ] Add the StemSpoor Mic Tile to the Quick Settings shade.
+- [ ] Verify Google AI Studio API key is configured for the Gemini Flash demo.
+- [ ] Open Obsidian connected to `Documents/RecMe/vault` to show live synchronization.

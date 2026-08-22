@@ -123,4 +123,13 @@ dependencies {
 
   // llama.cpp Kotlin bindings for on-device GGUF LLM inference
   implementation("io.github.ljcamargo:llamacpp-kotlin:0.4.0")
+
+  // Koin Dependency Injection
+  implementation(libs.koin.android)
+  implementation(libs.koin.androidx.compose)
+
+  // Room Persistence Library
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
+  annotationProcessor(libs.androidx.room.compiler)
 }

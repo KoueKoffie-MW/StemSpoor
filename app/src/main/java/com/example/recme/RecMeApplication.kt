@@ -5,15 +5,28 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.example.recme.di.appModule
 import com.example.recme.storage.StorageManager
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 /**
- * Application entry point setting up notification channels and running startup storage integrity repairs.
+ * Application entry point setting up notification channels, Koin DI, and startup storage integrity repairs.
  */
 class RecMeApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        
+        // Initialize Koin Dependency Injection
+        startKoin {
+            androidLogger(Level.ERROR)
+            androidContext(this@RecMeApplication)
+            modules(appModule)
+        }
+
         createNotificationChannels()
 
         // Run crash recovery on background files on startup (ADR-0002)

@@ -21,6 +21,8 @@ playServicesAuth = "21.6.0"
 googleApiClient = "2.9.0"
 googleDriveApi = "v3-rev20250216-2.0.0"
 androidxWork = "2.11.2"
+androidxRoom = "2.6.1"
+koin = "4.0.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -54,6 +56,15 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 google-api-client-android = { module = "com.google.api-client:google-api-client-android", version.ref = "googleApiClient" }
 google-api-services-drive = { module = "com.google.apis:google-api-services-drive", version.ref = "googleDriveApi" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidxWork" }
+
+# Room
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidxRoom" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidxRoom" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidxRoom" }
+
+# Koin Dependency Injection
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
